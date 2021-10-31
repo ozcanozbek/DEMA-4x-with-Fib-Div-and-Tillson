@@ -1,3 +1,4 @@
 # DEMA-4x-with-Fib-Div-and-Tillson
 
-Uygulama Videosu ➤ https://bit.ly/3GCVukv
+İndikatör Kurma Videosu ➤ https://bit.ly/3nG3oB7
+İndikatör Uygulama Videosu ➤ https://bit.ly/3GCVukv
