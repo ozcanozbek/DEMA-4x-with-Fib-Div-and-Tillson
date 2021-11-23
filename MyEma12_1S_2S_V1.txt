@@ -1,0 +1,43 @@
+//@version=5
+indicator(title='MyEma12_1S_2S V1', shorttitle='MyEma12_1S_2S V1', format=format.volume)
+
+
+tf1S = input("60", title='Zaman Dilimi 1:', defval='60')
+myClose1S = request.security(syminfo.tickerid, tf1S, close)
+myRsi1S = ta.rsi(myClose1S,14)
+myEma121S = ta.ema(myRsi1S, 12)
+
+tf2S = input("120", title='Zaman Dilimi 2:', defval='120')
+myClose2S = request.security(syminfo.tickerid, tf2S, close)
+myRsi2S = ta.rsi(myClose2S,14)
+myEma122S = ta.ema(myRsi2S, 12)
+
+tf3S = input("240", title='Zaman Dilimi 3:', defval='240')
+myClose3S = request.security(syminfo.tickerid, tf3S, close)
+myRsi3S = ta.rsi(myClose3S,14)
+myEma123S = ta.ema(myRsi3S, 12)
+
+
+//myEma12
+plot(myRsi1S, title="Rsi 1S", color=color.yellow, offset=0, linewidth=2)
+plot(myEma121S, title="EMA12 1S", color=color.yellow, offset=0, linewidth=2)
+
+plot(myRsi2S, title="Rsi 2S", color=color.orange, offset=0, linewidth=2)
+plot(myEma122S, title="EMA12 2S", color=color.orange, offset=0, linewidth=2)
+
+plot(myRsi3S, title="Rsi 3S", color=color.red, offset=0, linewidth=2)
+plot(myEma123S, title="EMA12 3S", color=color.red, offset=0, linewidth=2)
+
+ema12Ema12Y = ta.crossover(myEma122S, myEma121S)
+plotshape(ema12Ema12Y ,title ='EMAs AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
+
+ema12Ema12A = ta.crossunder(myEma122S, myEma121S)
+plotshape(ema12Ema12A ,title ='EMAs SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
+
+bullzoneband = hline(65, "Bull Lower Zone", color=#40E0D0, linewidth=2, linestyle=hline.style_dotted)
+upband = hline(80, "Bull Uppe Zoner", color=#40E0D0, linewidth=2)
+fill(upband, bullzoneband, color=#40E0D0, transp=90)
+
+bearzoneband = hline(45, "Bear Upper Zone", color=#9400D3, linewidth=2, linestyle=hline.style_dotted)
+downband = hline(30, "Bear Lower Zone", color=#9400D3, linewidth=2)
+fill(bearzoneband, downband, color=#9400D3, transp=90)
