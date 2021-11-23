@@ -1,0 +1,50 @@
+//@version=5
+indicator(title='MyTekilEma9Wma30 V5', shorttitle='MyTekilEma9Wma30 V5', format=format.volume, timeframe="")
+
+myClose = request.security(syminfo.tickerid, timeframe.period, close)
+tColor = myClose > myClose[1] ? #00bcd4 : color.red
+
+plot(myClose, "Ticker" , color=tColor, linewidth=2, style = plot.style_line )
+
+myEma = ta.ema(myClose, 9)
+myEma3 = ta.ema(myClose, 3)
+myWma = ta.wma(myClose, 30)
+myDurum = myEma > myWma ? color.lime : color.red
+myEmaTrend = myEma > myEma[1] ? "1" : "0"
+
+Dema = input.int(200, minval=1)
+e41 = ta.ema(myClose, Dema)
+e42 = ta.ema(e41, Dema)
+dema4 = 2 * e41 - e42
+plot(dema4, 'Dema 200', color=color.new(color.blue, 0), linewidth=3)
+
+p1 = plot(myEma, title="EMA9", color=color.lime, offset=0, linewidth=3)
+p2 = plot(myWma, title="WMA30", color=color.red, offset=0, linewidth=3) 
+
+plotshape(myEma >= myEma[1] ,title ='artı', text='', style=shape.cross, location=location.abovebar, color=myDurum, offset=0, size=size.tiny)
+plotshape(myEma < myEma[1] ,title ='eksi', text='', style=shape.arrowdown, location=location.belowbar, color=myDurum, offset=0, size=size.tiny)
+
+ema9YukariKesWma30 = ta.crossover(myEma, myWma)
+plotshape(ema9YukariKesWma30 ,title ='EW AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
+alertcondition(ema9YukariKesWma30, title="EW AL", message='EW AL {{ticker}}, FİYAT={{close}}')
+
+ema9AsagiKesWma30 = ta.crossunder(myEma, myWma)
+plotshape(ema9AsagiKesWma30 ,title ='EW SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
+alertcondition(ema9AsagiKesWma30, title="EW SAT", message='EW SAT {{ticker}}, FİYAT={{close}}')
+
+ema3ToEma9 = ta.crossover(myEma3, myEma)
+ema3ToWma30 = ta.crossover(myEma3, myWma)
+plotshape(ema3ToEma9 or ema3ToWma30, title ='E3 AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+alertcondition(ema3ToEma9 or ema3ToWma30, title="E3 AL", message='E3 AL {{ticker}}, FİYAT={{close}}')
+
+ema3FromEma9 = ta.crossunder(myEma3, myEma)
+ema3FromWma30 = ta.crossunder(myEma3, myWma)
+plotshape(ema3FromEma9 or ema3FromWma30, title ='E3 SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+alertcondition(ema3FromEma9 or ema3FromWma30, title="E3 SAT", message='E3 SAT {{ticker}}, FİYAT={{close}}')
+
+//ema9 => dema4
+ema9Dema4 = ta.crossover(myEma, dema4)
+plotshape(ema9Dema4 ,title ='ED AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.yellow, 0), offset=0, size=size.small)
+alertcondition(ema9Dema4, title="ED AL", message='ED AL {{ticker}}, FİYAT={{close}}')
+
+
