@@ -1,0 +1,40 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © ozcanozbek
+
+//@version=5
+
+indicator('myIFTRSI V2', shorttitle='myIFTRSI V2')
+tf1 = input("5", title='Zaman Dilimi 1:', defval='')
+tf2 = input("30", title='Zaman Dilimi 2:', defval='')
+tf3 = input("120", title='Zaman Dilimi 3:', defval='')
+
+
+RSI = true
+wmalength = input(9, title='Smoothing Length')
+rsilength = input(5, 'RSI Length')
+
+myClose1 = request.security(syminfo.tickerid, tf1, close)
+myClose2 = request.security(syminfo.tickerid, tf2, close)
+myClose3 = request.security(syminfo.tickerid, tf3, close)
+
+v12 = 0.1 * (ta.rsi(myClose1, rsilength) - 50)
+v22 = ta.wma(v12, wmalength)
+INV2 = (math.exp(2 * v22) - 1) / (math.exp(2 * v22) + 1)
+plot(RSI and INV2 ? INV2 * 100 : na, color=color.new(color.yellow, 0), linewidth=4, title='RSI 1')
+
+v12_2 = 0.1 * (ta.rsi(myClose2, rsilength) - 50)
+v22_2 = ta.wma(v12_2, wmalength)
+INV2_2 = (math.exp(2 * v22_2) - 1) / (math.exp(2 * v22_2) + 1)
+plot(RSI and INV2_2 ? INV2_2 * 100 : na, color=color.new(color.orange, 0), linewidth=3, title='RSI 2')
+
+v12_3 = 0.1 * (ta.rsi(myClose3, rsilength) - 50)
+v22_3 = ta.wma(v12_3, wmalength)
+INV2_3 = (math.exp(2 * v22_3) - 1) / (math.exp(2 * v22_3) + 1)
+plot(RSI and INV2_3 ? INV2_3 * 100 : na, color=color.new(color.blue, 0), linewidth=2, title='RSI 3')
+
+myLine0 = hline(0, color=color.green)
+
+rsiYukariKesRsi0 = ta.crossover(INV2 , -0.50)
+plotshape(rsiYukariKesRsi0, text='', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.tiny)
+alertcondition(rsiYukariKesRsi0, title="IFTRSI AL", message='IFTRSI AL {{ticker}}, FİYAT={{close}}')
+
