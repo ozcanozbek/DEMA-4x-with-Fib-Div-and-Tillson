@@ -1,0 +1,313 @@
+//O2can O2bek (Özcan Özbek)
+//@version=5
+indicator(title='DEMA 4x with Fib Div and Tillson - V5', shorttitle='DEMA 4x with Fib Div and Tillson - V5', overlay=true, timeframe="")
+src = input(close, title='Source')
+length1 = input(3, 'T3 Length')
+a1 = input(0.5, 'Volume Factor')
+
+
+//FBANDS
+EMAperiod = input.int(14, title='EMAperiod', minval=1, maxval=500)
+ATRperiod = input.int(14, title='ATRperiod', minval=1, maxval=500)
+EMA = ta.ema(close, EMAperiod)
+TR1 = math.max(high - low, math.abs(high - close[1]))
+TR = math.max(TR1, math.abs(low - close[1]))
+ATR = ta.sma(TR, ATRperiod)
+F2 = input(defval=1.618, title='Fibonacci Ratio 2')
+F3 = input(defval=2.618, title='Fibonacci Ratio 3')
+F4 = input(defval=4.236, title='Fibonacci Ratio 4')
+R1 = ATR
+R2 = ATR * F2
+R3 = ATR * F3
+R4 = ATR * F4
+FIBOTOP4 = EMA + R4
+FIBOTOP3 = EMA + R3
+FIBOTOP2 = EMA + R2
+FIBOTOP1 = EMA + R1
+FIBOBOT1 = EMA - R1
+FIBOBOT2 = EMA - R2
+FIBOBOT3 = EMA - R3
+FIBOBOT4 = EMA - R4
+plot(FIBOTOP4, title='Fibo Üst-4', linewidth=1, color=color.new(color.white, 0))
+plot(FIBOTOP3, title='Fibo Üst-3', linewidth=1, color=color.new(color.lime, 0))
+plot(FIBOTOP2, title='Fibo Üst-2', linewidth=1, color=color.new(color.orange, 0))
+plot(FIBOTOP1, title='Fibo Üst-1', linewidth=1, color=color.new(color.yellow, 0))
+plot(FIBOBOT1, title='Fibo Alt-1', linewidth=1, color=color.new(color.yellow, 0))
+plot(FIBOBOT2, title='Fibo Alt-2', linewidth=1, color=color.new(color.orange, 0))
+plot(FIBOBOT3, title='Fibo Alt-3', linewidth=1, color=color.new(color.lime, 0))
+plot(FIBOBOT4, title='Fibo Alt-4', linewidth=1, color=color.new(color.white, 0))
+
+//TSL
+resTsl = timeframe.period
+K1 = ta.valuewhen(low > low[1], low[1], 1)
+TSL = request.security(syminfo.tickerid, resTsl, K1)
+plot(TSL, linewidth=3, color=color.new(color.white, 0), title='TSL',  style =plot.style_circles)
+
+//Tillson
+e1 = ta.ema((high + low + 2 * close) / 4, length1)
+e2 = ta.ema(e1, length1)
+e3 = ta.ema(e2, length1)
+e4 = ta.ema(e3, length1)
+e5 = ta.ema(e4, length1)
+e6 = ta.ema(e5, length1)
+c1 = -a1 * a1 * a1
+c2 = 3 * a1 * a1 + 3 * a1 * a1 * a1
+c3 = -6 * a1 * a1 - 3 * a1 - 3 * a1 * a1 * a1
+c4 = 1 + 3 * a1 + a1 * a1 * a1 + 3 * a1 * a1
+T3 = c1 * e6 + c2 * e5 + c3 * e4 + c4 * e3
+
+col1 = T3 > T3[1]
+col3 = T3 < T3[1]
+color_1 = col1 ? color.lime : col3 ? color.red : color.yellow
+
+alertcondition(ta.cross(T3, T3[1]) and col1, title="T3 AL", message='T3 AL {{ticker}}, FİYAT={{close}}')
+alertcondition(ta.cross(T3, T3[1]) and col3, title="T3 SAT", message='T3 SAT {{ticker}}, FİYAT={{close}}')
+
+plotshape(ta.cross(T3, T3[1]) and col1,title ='T3 AL', text='T3\nAL', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=-1, size=size.tiny)
+plotshape(ta.cross(T3, T3[1]) and col3,title ='T3 SAT', text='T3\nSAT', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.tiny)
+
+//O2 DEMA 4x
+length0 = input.int(20, minval=1)
+e11 = ta.ema(src, length0)
+e12 = ta.ema(e11, length0)
+dema1 = 2 * e11 - e12
+plot(dema1, 'Dema 20', color=color.new(color.white, 0), linewidth=3)
+
+length2 = input.int(50, minval=1)
+e21 = ta.ema(src, length2)
+e22 = ta.ema(e21, length2)
+dema2 = 2 * e21 - e22
+plot(dema2, 'Dema 50', color=color.new(color.yellow, 0), linewidth=3)
+
+length3 = input.int(100, minval=1)
+e31 = ta.ema(src, length3)
+e32 = ta.ema(e31, length3)
+dema3 = 2 * e31 - e32
+plot(dema3, 'Dema 100', color=color.new(color.lime, 0), linewidth=3)
+
+length4 = input.int(200, minval=1)
+e41 = ta.ema(src, length4)
+e42 = ta.ema(e41, length4)
+dema4 = 2 * e41 - e42
+plot(dema4, 'Dema 200', color=color.new(color.blue, 0), linewidth=3)
+
+
+//FibDiv
+source = src
+topbots = input(true, title='Show PPO high/low triangles?')
+long_term_div = input(true, title='Use long term divergences?')
+div_lookback_period = input.int(55, minval=1, title='Lookback Period')
+fastLength = input.int(12, minval=1, title='PPO Fast')
+slowLength = input.int(26, minval=1, title='PPO Slow')
+signalLength = input.int(9, minval=1, title='PPO Signal')
+smoother = input.int(2, minval=1, title='PPO Smooth')
+fastMA = ta.ema(source, fastLength)
+slowMA = ta.ema(source, slowLength)
+macd = fastMA - slowMA
+macd2 = macd / slowMA * 100
+d = ta.sma(macd2, smoother)  // smoothing PPO
+
+bullishPrice = low
+
+priceMins = bullishPrice > bullishPrice[1] and bullishPrice[1] < bullishPrice[2] or low[1] == low[2] and low[1] < low and low[1] < low[3] or low[1] == low[2] and low[1] == low[3] and low[1] < low and low[1] < low[4] or low[1] == low[2] and low[1] == low[3] and low[1] and low[1] == low[4] and low[1] < low and low[1] < low[5]  // this line identifies bottoms and plateaus in the price
+oscMins = d > d[1] and d[1] < d[2]  // this line identifies bottoms in the PPO
+
+BottomPointsInPPO = oscMins
+
+bearishPrice = high
+priceMax = bearishPrice < bearishPrice[1] and bearishPrice[1] > bearishPrice[2] or high[1] == high[2] and high[1] > high and high[1] > high[3] or high[1] == high[2] and high[1] == high[3] and high[1] > high and high[1] > high[4] or high[1] == high[2] and high[1] == high[3] and high[1] and high[1] == high[4] and high[1] > high and high[1] > high[5]  // this line identifies tops in the price
+oscMax = d < d[1] and d[1] > d[2]  // this line identifies tops in the PPO
+
+TopPointsInPPO = oscMax
+
+currenttrough4 = ta.valuewhen(oscMins, d[1], 0)  // identifies the value of PPO at the most recent BOTTOM in the PPO
+lasttrough4 = ta.valuewhen(oscMins, d[1], 1)  // NOT USED identifies the value of PPO at the second most recent BOTTOM in the PPO
+currenttrough5 = ta.valuewhen(oscMax, d[1], 0)  // identifies the value of PPO at the most recent TOP in the PPO
+lasttrough5 = ta.valuewhen(oscMax, d[1], 1)  // NOT USED identifies the value of PPO at the second most recent TOP in the PPO
+
+currenttrough6 = ta.valuewhen(priceMins, low[1], 0)  // this line identifies the low (price) at the most recent bottom in the Price
+lasttrough6 = ta.valuewhen(priceMins, low[1], 1)  // NOT USED this line identifies the low (price) at the second most recent bottom in the Price
+currenttrough7 = ta.valuewhen(priceMax, high[1], 0)  // this line identifies the high (price) at the most recent top in the Price
+lasttrough7 = ta.valuewhen(priceMax, high[1], 1)  // NOT USED this line identifies the high (price) at the second most recent top in the Price
+
+delayedlow = priceMins and ta.barssince(oscMins) < 3 ? low[1] : na
+delayedhigh = priceMax and ta.barssince(oscMax) < 3 ? high[1] : na
+
+// only take tops/bottoms in price when tops/bottoms are less than 5 bars away
+filter = ta.barssince(priceMins) < 5 ? ta.lowest(currenttrough6, 4) : na
+filter2 = ta.barssince(priceMax) < 5 ? ta.highest(currenttrough7, 4) : na
+
+//delayedbottom/top when oscillator bottom/top is earlier than price bottom/top
+y11 = ta.valuewhen(oscMins, delayedlow, 0)
+y12 = ta.valuewhen(oscMax, delayedhigh, 0)
+
+// only take tops/bottoms in price when tops/bottoms are less than 5 bars away, since 2nd most recent top/bottom in osc
+y2 = ta.valuewhen(oscMax, filter2, 1)  // identifies the highest high in the tops of price with 5 bar lookback period SINCE the SECOND most recent top in PPO
+y6 = ta.valuewhen(oscMins, filter, 1)  // identifies the lowest low in the bottoms of price with 5 bar lookback period SINCE the SECOND most recent bottom in PPO
+
+long_term_bull_filt = ta.valuewhen(priceMins, ta.lowest(div_lookback_period), 1)
+long_term_bear_filt = ta.valuewhen(priceMax, ta.highest(div_lookback_period), 1)
+
+y3 = ta.valuewhen(oscMax, currenttrough5, 0)  // identifies the value of PPO in the most recent top of PPO 
+y4 = ta.valuewhen(oscMax, currenttrough5, 1)  // identifies the value of PPO in the second most recent top of PPO 
+
+y7 = ta.valuewhen(oscMins, currenttrough4, 0)  // identifies the value of PPO in the most recent bottom of PPO
+y8 = ta.valuewhen(oscMins, currenttrough4, 1)  // identifies the value of PPO in the SECOND most recent bottom of PPO
+
+y9 = ta.valuewhen(oscMins, currenttrough6, 0)
+y10 = ta.valuewhen(oscMax, currenttrough7, 0)
+
+bulldiv = BottomPointsInPPO ? d[1] : na  // plots dots at bottoms in the PPO
+beardiv = TopPointsInPPO ? d[1] : na  // plots dots at tops in the PPO
+
+i = currenttrough5 < ta.highest(d, div_lookback_period)  // long term bearish oscilator divergence
+i2 = y10 > long_term_bear_filt  // long term bearish top divergence
+i3 = delayedhigh > long_term_bear_filt  // long term bearish delayedhigh divergence
+
+i4 = currenttrough4 > ta.lowest(d, div_lookback_period)  // long term bullish osc divergence
+i5 = y9 < long_term_bull_filt  // long term bullish bottom div
+i6 = delayedlow < long_term_bull_filt  // long term bullish delayedbottom div
+
+
+bearishdiv1 = y10 > y2 and oscMax and y3 < y4 ? true : false
+bearishdiv2 = delayedhigh > y2 and y3 < y4 ? true : false
+bearishdiv3 = long_term_div and oscMax and i and i2 ? true : false
+bearishdiv4 = long_term_div and i and i3 ? true : false
+
+bullishdiv1 = y9 < y6 and oscMins and y7 > y8 ? true : false
+bullishdiv2 = delayedlow < y6 and y7 > y8 ? true : false
+bullishdiv3 = long_term_div and oscMins and i4 and i5 ? true : false
+bullishdiv4 = long_term_div and i4 and i6 ? true : false
+
+bearish = bearishdiv1 or bearishdiv2 or bearishdiv3 or bearishdiv4
+bullish = bullishdiv1 or bullishdiv2 or bullishdiv3 or bullishdiv4
+
+greendot = beardiv != 0 ? true : false
+reddot = bulldiv != 0 ? true : false
+
+alertcondition(reddot, title='Fib Al', message='Fib AL {{ticker}}, FİYAT={{close}}')
+alertcondition(greendot, title='Fib Sat', message='Fib SAT {{ticker}}, FİYAT={{close}}')
+
+plotshape(topbots and reddot ? d : na, title = 'Fib AL', text='Fib\nAL', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=-1, size=size.tiny)
+plotshape(topbots and greendot ? d : na,title ='Fib SAT' , text='Fib\nSAT', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.tiny)
+
+//Fiblines
+len = input(title='Period', defval=200)
+fractal_top = 0.0
+fractal_top := high < high[2] and high[1] < high[2] and high[3] < high[2] and high[4] < high[2] ? high[2] : fractal_top[1]
+fractal_bottom = 0.0
+fractal_bottom := low > low[2] and low[1] > low[2] and low[3] > low[2] and low[4] > low[2] ? low[2] : fractal_bottom[1]
+
+srcHigh = ta.highest(fractal_top, len)
+srcLow = ta.lowest(fractal_bottom, len)
+diff = srcHigh - srcLow
+line0000 = srcLow
+line0236 = srcLow + diff * 0.236
+line0382 = srcLow + diff * 0.382
+line0500 = srcLow + diff * 0.500
+line0618 = srcLow + diff * 0.618
+line0786 = srcLow + diff * 0.786
+line1000 = srcHigh
+line1272 = srcLow + diff * 1.272
+line1414 = srcLow + diff * 1.414
+line1618 = srcLow + diff * 1.618
+line2000 = srcLow + diff * 2.000
+line2272 = srcLow + diff * 2.272
+line1272_2 = srcHigh - diff * 1.272
+line1414_2 = srcHigh - diff * 1.414
+line1618_2 = srcHigh - diff * 1.618
+line2000_2 = srcHigh - diff * 2.000
+line2272_2 = srcHigh - diff * 2.272
+
+plot(line0000, title='0.000', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0236, title='0.236', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0382, title='0.382', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0500, title='0.500', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0618, title='0.618', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0786, title='0.786', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1000, title='1.000', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1272, title='1.272', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1414, title='1.414', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1618, title='1.618', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2000, title='2.000', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2272, title='2.272', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1272_2, title='-0.272', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1414_2, title='-0.414', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1618_2, title='-0.618', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2000_2, title='-1.000', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2272_2, title='-1.272', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+
+//EMA9
+lenEma9 = input.int(9, minval=1, title="Ema Length")
+outEma9 = ta.ema(close, lenEma9)
+pEma9 = plot(outEma9, title="EMA9", color=color.lime, offset=0, linewidth=3)
+
+//WMA30
+lenWma30 = input.int(30, minval=1, title="Wma Length")
+outWma30 = ta.wma(close, lenWma30)
+pWma30 = plot(outWma30, title="WMA30", color=color.red, offset=0, linewidth=3) 
+
+fill(pEma9, pWma30, color=color.new(color.lime, 75))
+
+
+//EMA9 ve WMA30 Kesişmesi
+ema9YukariKesWma30 = ta.crossover(outEma9, outWma30)
+plotshape(ema9YukariKesWma30 ,title ='EW AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
+alertcondition(ema9YukariKesWma30, title="EW AL", message='EW AL {{ticker}}, FİYAT={{close}}')
+
+ema9AsagiKesWma30 = ta.crossunder(outEma9, outWma30)
+plotshape(ema9AsagiKesWma30 ,title ='EW SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
+alertcondition(ema9AsagiKesWma30, title="EW SAT", message='EW SAT {{ticker}}, FİYAT={{close}}')
+
+alertcondition(ema9YukariKesWma30 or ema9AsagiKesWma30, title="EW ALSAT", message='EW ALSAT {{ticker}}, FİYAT={{close}}')
+
+//ema9 => dema200
+ema9Dema4 = ta.crossover(outEma9, dema4)
+plotshape(ema9Dema4 ,title ='ED AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.yellow, 0), offset=0, size=size.small)
+alertcondition(ema9Dema4, title="ED AL", message='ED AL {{ticker}}, FİYAT={{close}}')
+
+//ema9 => dema200
+ema9Dema4A = ta.crossunder(outEma9, dema4)
+plotshape(ema9Dema4A ,title ='ED SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.yellow, 0), offset=0, size=size.small)
+alertcondition(ema9Dema4A, title="ED SAT", message='ED SAT {{ticker}}, FİYAT={{close}}')
+
+//ema9 => dema100
+//ema9Dema3 = ta.crossover(outEma9, dema3)
+//plotshape(ema9Dema3 ,title ='EDC AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.orange, 0), offset=0, size=size.small)
+//alertcondition(ema9Dema3, title="EDC AL", message='EDC AL {{ticker}}, FİYAT={{close}}')
+
+
+//ema9 => dema100
+ema9Dema3A = ta.crossunder(outEma9, dema3)
+plotshape(ema9Dema3A ,title ='EDC SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.small)
+alertcondition(ema9Dema3A, title="EDC SAT", message='EDC SAT {{ticker}}, FİYAT={{close}}')
+
+
+//Tillson Plot
+plot(T3, color=color_1, linewidth=3, title='T3')
+
+//DEMA Son
+sartD020 = ta.crossover(close, dema1) and close > dema1 and dema1 >= dema1[1] 
+plotshape(sartD020 ,title ='D020 AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
+alertcondition(sartD020, title="D020 AL", message='D20 AL {{ticker}}, FİYAT={{close}}')
+
+//sartD050 = ta.crossover(close, dema2) and close > dema2 and dema2 >= dema2[1]
+sartD050 = ta.crossover(close, dema2) and close > dema2 and dema1 >= dema1[1]
+plotshape(sartD050 ,title ='D050 AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+alertcondition(sartD050, title="D050 AL", message='D50 AL {{ticker}}, FİYAT={{close}}')
+
+//sartD100 = ta.crossover(close, dema3) and close > dema3 and dema3 >= dema3[1]
+sartD100 = ta.crossover(close, dema3) and close > dema3 and dema1 >= dema1[1]
+plotshape(sartD100 ,title ='D100 AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.tiny)
+alertcondition(sartD100, title="D100 AL", message='D100 AL {{ticker}}, FİYAT={{close}}')
+
+//sartD200 = ta.crossover(close, dema4) and close > dema4 and dema4 >= dema4[1]
+sartD200 = ta.crossover(close, dema4) and close > dema4 and dema1 >= dema1[1]
+plotshape(sartD200 ,title ='D200 AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.blue, 0), offset=0, size=size.tiny)
+alertcondition(sartD200, title="D200 AL", message='D200 AL {{ticker}}, FİYAT={{close}}')
+
+sartDANY = sartD020 or sartD050 or sartD100 or sartD200
+plotshape(sartDANY ,title ='DANY AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+alertcondition(sartDANY, title="DANY AL", message='DANY AL {{ticker}}, FİYAT={{close}}')
+
+///HEDEFE VARDI
