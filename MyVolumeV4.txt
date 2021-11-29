@@ -95,13 +95,13 @@ else
 
 yukselmeDurumu = deger > 0 and yon >0
 plotshape(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==false , text='', style=shape.triangleup, location=location.top, color=color.new(color.yellow, 0), offset=0, size=size.small)
-alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==false, title='Hacim (1x1)', message='Hacim(1x1) {{ticker}}, FİYAT={{close}}')
+alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==false, title='Hacim(1x1)', message='Hacim(1x1) {{ticker}}, FİYAT={{close}}')
 
 plotshape(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==false, text='', style=shape.triangleup, location=location.top, color=color.new(color.orange, 0), offset=0, size=size.small)
-alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==false, title='Hacim (1x2)', message='Hacim(1x2) {{ticker}}, FİYAT={{close}}')
+alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==false, title='Hacim(1x2)', message='Hacim(1x2) {{ticker}}, FİYAT={{close}}')
 
 plotshape(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==true, text='', style=shape.triangleup, location=location.top, color=color.new(color.red, 0), offset=0, size=size.small)
-alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==true, title='Hacim (1x3)', message='Hacim(1x3) {{ticker}}, FİYAT={{close}}')
+alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==true, title='Hacim(1x3)', message='Hacim(1x3) {{ticker}}, FİYAT={{close}}')
 
 
 sart3 =  (yon==1 and deger > 1) and (deger[1]==0 and deger[2]==0 and deger[3]==0 and deger[4]==0 and deger[5]==0 and deger[6]==0 )
