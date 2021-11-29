@@ -1,0 +1,250 @@
+//@version=5
+indicator(title='MyVolume V4', shorttitle='MyVolume V4', format=format.volume, timeframe="")
+
+myOpen = request.security(syminfo.tickerid, timeframe.period, open)
+myClose = request.security(syminfo.tickerid, timeframe.period, close)
+myVolume = request.security(syminfo.tickerid, timeframe.period, volume)
+
+
+
+//dema20
+uzunluk = 20
+d20 = ta.ema(myClose, uzunluk)
+d21 = ta.ema(d20, uzunluk)
+dema20 = 2 * d20 - d21
+
+//ema9
+ema9 = ta.ema(myClose, 9)
+
+//wma30
+wma30 = ta.wma(myClose, 30)
+
+
+degerle(bas, bit, vol) =>
+
+    myOrtalama = ta.sma(vol, 21)
+
+    yonu = if(bas >= bit)
+        0
+    else
+        1
+    
+
+    [degeri, rengi] = if vol <= myOrtalama
+        //0
+        [0, color.new(color.white, 30)]
+    else
+        if vol > myOrtalama and vol <= (myOrtalama * 2) 
+            //1  //Volume
+            [1, color.new(color.yellow, 0)]
+        else
+            if vol > (myOrtalama * 2) and vol <= (myOrtalama * 3) 
+                //2 //2X 
+                [2, color.new(#00bcd4, 0)]
+            else
+                if vol > (myOrtalama * 3) and vol <= (myOrtalama * 4) 
+                    //3 //3X
+                    [3, color.new(color.green, 0) ]
+                else
+                    //4 //3X+
+                    [4, color.new(color.lime, 0)]
+                    
+    if yonu==0 
+        rengi := color.new(color.red, 40)
+                    
+    [yonu, degeri, rengi]
+
+
+[yon, deger, renk] = degerle(myOpen, myClose, myVolume)
+
+
+alertcondition(deger == 1, title='Volume 1X', message='Volume 1X 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(deger == 2, title='Volume 2X', message='Volume 2X 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(deger == 3, title='Volume 3X', message='Volume 3X 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(deger == 4, title='Volume 3X+', message='Volume 3X+ 5D {{ticker}}, FİYAT={{close}}')
+
+
+alertcondition(yon== 1 and deger == 1, title='Volume 1X AL', message='Volume 1X AL 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger == 2, title='Volume 2X AL', message='Volume 2X AL 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger == 3, title='Volume 3X AL', message='Volume 3X AL 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger == 4, title='Volume 3X+ AL', message='Volume 3X+ AL 5D {{ticker}}, FİYAT={{close}}')
+
+alertcondition(yon== 0 and deger == 1, title='Volume 1X SAT', message='Volume 1X SAT 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger == 2, title='Volume 2X SAT', message='Volume 2X SAT 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger == 3, title='Volume 3X SAT', message='Volume 3X SAT 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger == 4, title='Volume 3X+ SAT', message='Volume 3X+ SAT 5D {{ticker}}, FİYAT={{close}}')
+
+
+gecmisEksi1 = if yon[1] == 0 and deger[1] > 0
+    deger[1] 
+else
+    0
+gecmisEksi2 = if yon[2] == 0 and deger[2] > 0
+    deger[2] 
+else
+    0
+gecmisEksi3 = if yon[3] == 0 and deger[3] > 0
+    deger[3] 
+else
+    0
+gecmisEksi4 = if yon[4] == 0 and deger[4] > 0
+    deger[4] 
+else
+    0
+
+
+yukselmeDurumu = deger > 0 and yon >0
+plotshape(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==false , text='', style=shape.triangleup, location=location.top, color=color.new(color.yellow, 0), offset=0, size=size.small)
+alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==false, title='SarıHacim (1x1)', message='SarıHacim(1x1) {{ticker}}, FİYAT={{close}}')
+
+plotshape(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==false, text='', style=shape.triangleup, location=location.top, color=color.new(color.orange, 0), offset=0, size=size.small)
+alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==false, title='TuruncuHacim (1x2)', message='TuruncuHacim(1x2) {{ticker}}, FİYAT={{close}}')
+
+plotshape(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==true, text='', style=shape.triangleup, location=location.top, color=color.new(color.red, 0), offset=0, size=size.small)
+alertcondition(yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==true, title='TuruncuHacim (1x3)', message='TuruncuHacim(1x3) {{ticker}}, FİYAT={{close}}')
+
+
+sart3 =  (yon==1 and deger > 1) and (deger[1]==0 and deger[2]==0 and deger[3]==0 and deger[4]==0 and deger[5]==0 and deger[6]==0 )
+sart1 =  yon==1 and deger > 1 and deger > deger[1] and deger > deger[2]  
+sart2 = (not sart3) and  (yon==1 and deger > 0) and ((yon[1]==0 and deger[1] >= 0) or (yon[1]==1 and deger[1] == 0))
+
+
+
+sartDemas = dema20 > dema20[1] // and close >= wma30 and ema9 >= wma30
+renkDema20 = sartDemas ? color.lime : color.red
+
+plotshape(sart1, text='1\ns', style=shape.square, location=location.top, color=color.new(renkDema20, 0), offset=0, size=size.auto)
+plotshape(sart2, text='2\ns', style=shape.square, location=location.top, color=color.new(renkDema20, 0), offset=0, size=size.auto)
+plotshape(sart3, text='3\ns', style=shape.square, location=location.top, color=color.new(renkDema20, 0), offset=0, size=size.auto)
+
+
+sartlar = sart1 or sart2 or sart3    
+alertcondition(sartlar, title='Sartlar AL', message='Sartlar AL {{ticker}}, FİYAT={{close}}')
+alertcondition(sart1, title='Sart 1 AL', message='Sart1 AL {{ticker}}, FİYAT={{close}}')
+alertcondition(sart1, title='Sart 2 AL', message='Sart2 AL {{ticker}}, FİYAT={{close}}')
+alertcondition(sart1, title='Sart 3 AL', message='Sart3 AL {{ticker}}, FİYAT={{close}}')
+
+plotshape(deger == 0 and yon ==0, text='', style=shape.circle, location=location.bottom, color=color.new(color.red, 50), offset=0, size=size.auto)
+plotshape(deger == 0 and yon ==1, text='', style=shape.circle, location=location.bottom, color=color.new(color.lime, 50), offset=0, size=size.auto)
+
+
+
+plotshape(deger == 1 and yon ==0, text='1', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.auto)
+plotshape(deger == 1 and yon ==1, text='1', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.auto)
+
+plotshape(deger == 2 and yon ==0, text='2', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.auto)
+plotshape(deger == 2 and yon ==1, text='2', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.auto)
+
+plotshape(deger == 3 and yon ==0, text='3', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.auto)
+plotshape(deger == 3 and yon ==1, text='3', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.auto)
+
+plotshape(deger == 4 and yon ==0, text='3+', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.auto)
+plotshape(deger == 4 and yon ==1, text='3+', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.auto)
+
+//Cetvel
+
+//myVolume1 := request.security(ticker.heikinashi(syminfo.tickerid), "1", volume)
+
+
+// 1 Dakika
+//myOpen1 = request.security(syminfo.tickerid, "1", open)
+//myClose1 = request.security(syminfo.tickerid, "1", close)
+//myVolume1 = request.security(syminfo.tickerid, "1", volume)
+
+//[yon1, deger1, rengi1] = degerle(myOpen1, myClose1, myVolume1)
+
+//peryodUyumu1 = 0
+//if  timeframe.period == "1"
+//    peryodUyumu1 := 1
+//else
+//    peryodUyumu1 := 0
+
+
+// 5 Dakika
+//myOpen5 = request.security(syminfo.tickerid, "5", open)
+//myClose5 = request.security(syminfo.tickerid, "5", close)
+//myVolume5 = request.security(syminfo.tickerid, "5", volume)
+
+//[yon5, deger5, rengi5] = degerle(myOpen5, myClose5, myVolume5)
+
+//peryodUyumu5 = 0
+//if  timeframe.period == "1" or timeframe.period == "5" 
+//    peryodUyumu5 := 1
+//else
+//    peryodUyumu5 := 0
+
+
+// 15 Dakika
+//myOpen15 = request.security(syminfo.tickerid, "15", open)
+//myClose15 = request.security(syminfo.tickerid, "15", close)
+//myVolume15 = request.security(syminfo.tickerid, "15", volume)
+
+//[yon15, deger15, rengi15] = degerle(myOpen15, myClose15, myVolume15)
+
+//peryodUyumu15 = 0
+//if  timeframe.period == "1" or timeframe.period == "5"  or timeframe.period == "15" 
+//    peryodUyumu15 := 1
+//else
+//    peryodUyumu15 := 0
+
+// 60 Dakika
+//myOpen60 = request.security(syminfo.tickerid, "60", open)
+//myClose60 = request.security(syminfo.tickerid, "60", close)
+//myVolume60 = request.security(syminfo.tickerid, "60", volume)
+
+//[yon60, deger60, rengi60] = degerle(myOpen60, myClose60, myVolume60)
+
+//peryodUyumu60 = 0
+//if  timeframe.period == "1" or timeframe.period == "5"  or timeframe.period == "15" or timeframe.period == "60"  
+//    peryodUyumu60 := 1
+//else
+//    peryodUyumu60 := 0
+
+// 120 Dakika
+//myOpen120 = request.security(syminfo.tickerid, "120", open)
+//myClose120 = request.security(syminfo.tickerid, "120", close)
+//myVolume120 = request.security(syminfo.tickerid, "120", volume)
+
+//[yon120, deger120, rengi120] = degerle(myOpen120, myClose120, myVolume120)
+
+//peryodUyumu120 = 0
+//if  timeframe.period == "1" or timeframe.period == "5"  or timeframe.period == "15" or timeframe.period == "60" or timeframe.period == "120"  
+//    peryodUyumu120 := 1
+//else
+//    peryodUyumu120 := 0
+
+// D 1 Gün
+//myOpen1G = request.security(syminfo.tickerid, "D", open)
+//myClose1G = request.security(syminfo.tickerid, "D", close)
+//myVolume1G = request.security(syminfo.tickerid, "D", volume)
+
+//[yon1G, deger1G, rengi1G] = degerle(myOpen1G, myClose1G, myVolume1G)
+
+//peryodUyumu1G = 0
+//if  timeframe.period == "1" or timeframe.period == "5"  or timeframe.period == "15" or timeframe.period == "60" or timeframe.period == "120" or timeframe.period == "D"
+//    peryodUyumu1G := 1
+//else
+//    peryodUyumu1G := 0
+
+// W 1 Hafta
+//myOpen1H = request.security(syminfo.tickerid, "W", open)
+//myClose1H = request.security(syminfo.tickerid, "W", close)
+//myVolume1H = request.security(syminfo.tickerid, "W", volume)
+
+//[yon1H, deger1H, rengi1H] = degerle(myOpen1H, myClose1H, myVolume1H)
+
+//peryodUyumu1H = 0
+//if  timeframe.period == "1" or timeframe.period == "5"  or timeframe.period == "15" or timeframe.period == "60" or timeframe.period == "120" or timeframe.period == "D" or timeframe.period == "W"
+//    peryodUyumu1H := 1
+//else
+//    peryodUyumu1H := 0
+
+
+//plot(9, title='1 Dakika', color = peryodUyumu1==1 ? rengi1 : color.new(color.white, 70) , style=plot.style_circles, linewidth = 4 , join=true)
+//plot(8, title='5 Dakika', color = peryodUyumu5==1 ? rengi5 : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4, join=true)
+//plot(7, title='15 Dakika', color = peryodUyumu15==1 ? rengi15 : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4, join=true)
+//plot(6, title='1 Saat', color = peryodUyumu60==1 ? rengi60 : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4, join=true)
+//plot(5, title='2 Saat', color = peryodUyumu120==1 ? rengi120 : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4, join=true)
+//plot(4, title='1 Gün', color = peryodUyumu1G==1 ? rengi1G : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4 , join=true)
+//plot(3, title='1 Hafta', color = peryodUyumu1H==1 ? rengi1H : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4, join=true)
+
