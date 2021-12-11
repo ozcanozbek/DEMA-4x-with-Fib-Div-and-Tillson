@@ -102,7 +102,7 @@ myFiboKosulu = myFiboKosul1 or myFiboKosul2 or myFiboKosul3 or myFiboKosul4 or m
 alertcondition(myFiboKosulu, title="Fibo Detay AL", message='Fibo Detay AL {{ticker}}, FİYAT={{close}}')
 
 myFiboKosula = myFiboKosul1a or myFiboKosul2a or myFiboKosul3a or myFiboKosul4a or myFiboKosul5a or myFiboKosul6a or myFiboKosul7a or myFiboKosul8a 
-alertcondition(myFiboKosula, title="Fib Detay SAT", message='Fib Detay SAT {{ticker}}, FİYAT={{close}}')
+alertcondition(myFiboKosula, title="Fibo Detay SAT", message='Fibo Detay SAT {{ticker}}, FİYAT={{close}}')
 
 //TSL
 resTsl = timeframe.period
@@ -255,7 +255,7 @@ bullish = bullishdiv1 or bullishdiv2 or bullishdiv3 or bullishdiv4
 greendot = beardiv != 0 ? true : false
 reddot = bulldiv != 0 ? true : false
 
-alertcondition(reddot, title='Fib Div Al', message='Fib Div  AL {{ticker}}, FİYAT={{close}}')
+alertcondition(reddot, title='Fib Div Al', message='Fib Div AL {{ticker}}, FİYAT={{close}}')
 alertcondition(greendot, title='Fib Div Sat', message='Fib Div SAT {{ticker}}, FİYAT={{close}}')
 
 
@@ -459,7 +459,7 @@ plotshape(myFibKosulu and acFibAl ? myFibKosulu : na ,title ='Fib AL', text='Fib
 plotshape(myFibKosula and acFibSat ? myFibKosula : na ,title ='Fib SAT', text='Fib', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.normal)
 
 plotshape(myFiboKosulu and acFiboDetayAl ? myFiboKosulu : na ,title ='Fibo Detay AL', text='Fd', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
-plotshape(myFiboKosula and acFiboDetaySat ? myFiboKosula : na ,title ='Fib Detay SAT', text='Fd', style=shape.triangledown, location=location.abovebar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+plotshape(myFiboKosula and acFiboDetaySat ? myFiboKosula : na ,title ='Fibo Detay SAT', text='Fd', style=shape.triangledown, location=location.abovebar, color=color.new(color.white, 0), offset=0, size=size.tiny)
 
 plotshape(sartDANY and acTemaAl ? sartDANY : na ,title ='TEMA AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
 plotshape(sartDANYa and acTemaSat ? sartDANYa : na ,title ='TEMA SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
