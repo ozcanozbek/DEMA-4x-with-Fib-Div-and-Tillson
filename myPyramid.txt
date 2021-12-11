@@ -1,6 +1,6 @@
 //O2can O2bek (Özcan Özbek)
 //@version=5
-indicator(title='myPyramid - V1', shorttitle='myPyramid - V1', overlay=true, timeframe="")
+indicator(title='myPyramid - V1.1', shorttitle='myPyramid - V1.1', overlay=true, timeframe="")
 
 
 //aç kapa
