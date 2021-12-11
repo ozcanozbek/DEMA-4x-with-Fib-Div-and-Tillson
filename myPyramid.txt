@@ -5,8 +5,6 @@ src = input(close, title='Source')
 length1 = input(3, 'T3 Length')
 a1 = input(0.5, 'Volume Factor')
 
-
-
 //FBANDS
 EMAperiod = input.int(14, title='EMAperiod', minval=1, maxval=500)
 ATRperiod = input.int(14, title='ATRperiod', minval=1, maxval=500)
@@ -30,14 +28,42 @@ FIBOBOT2 = EMA - R2
 FIBOBOT3 = EMA - R3
 FIBOBOT4 = EMA - R4
 
-plot(FIBOTOP4, title='Fibo Üst-4', linewidth=1, color=color.new(color.white, 0))
-plot(FIBOTOP3, title='Fibo Üst-3', linewidth=1, color=color.new(color.lime, 0))
-plot(FIBOTOP2, title='Fibo Üst-2', linewidth=1, color=color.new(color.orange, 0))
-plot(FIBOTOP1, title='Fibo Üst-1', linewidth=1, color=color.new(color.yellow, 0))
-plot(FIBOBOT1, title='Fibo Alt-1', linewidth=1, color=color.new(color.yellow, 0))
-plot(FIBOBOT2, title='Fibo Alt-2', linewidth=1, color=color.new(color.orange, 0))
-plot(FIBOBOT3, title='Fibo Alt-3', linewidth=1, color=color.new(color.lime, 0))
-plot(FIBOBOT4, title='Fibo Alt-4', linewidth=1, color=color.new(color.white, 0))
+//plot(FIBOTOP4, title='Fibo Üst-4', linewidth=1, color=color.new(color.white, 0))
+//plot(FIBOTOP3, title='Fibo Üst-3', linewidth=1, color=color.new(color.lime, 0))
+//plot(FIBOTOP2, title='Fibo Üst-2', linewidth=1, color=color.new(color.orange, 0))
+//plot(FIBOTOP1, title='Fibo Üst-1', linewidth=1, color=color.new(color.yellow, 0))
+//plot(FIBOBOT1, title='Fibo Alt-1', linewidth=1, color=color.new(color.yellow, 0))
+//plot(FIBOBOT2, title='Fibo Alt-2', linewidth=1, color=color.new(color.orange, 0))
+//plot(FIBOBOT3, title='Fibo Alt-3', linewidth=1, color=color.new(color.lime, 0))
+//plot(FIBOBOT4, title='Fibo Alt-4', linewidth=1, color=color.new(color.white, 0))
+
+myFiboKosul1 = ta.crossover(close, FIBOTOP4)
+myFiboKosul2 = ta.crossover(close, FIBOTOP3)
+myFiboKosul3 = ta.crossover(close, FIBOTOP2)
+myFiboKosul4 = ta.crossover(close, FIBOTOP1)
+myFiboKosul5 = ta.crossover(close, FIBOBOT1)
+myFiboKosul6 = ta.crossover(close, FIBOBOT2)
+myFiboKosul7 = ta.crossover(close, FIBOBOT3)
+myFiboKosul8 = ta.crossover(close, FIBOBOT4)
+
+
+myFiboKosul1a = ta.crossunder(close, FIBOTOP4)
+myFiboKosul2a = ta.crossunder(close, FIBOTOP3)
+myFiboKosul3a = ta.crossunder(close, FIBOTOP2)
+myFiboKosul4a = ta.crossunder(close, FIBOTOP1)
+myFiboKosul5a = ta.crossunder(close, FIBOBOT1)
+myFiboKosul6a = ta.crossunder(close, FIBOBOT2)
+myFiboKosul7a = ta.crossunder(close, FIBOBOT3)
+myFiboKosul8a = ta.crossunder(close, FIBOBOT4)
+
+
+myFiboKosulu = myFiboKosul1 or myFiboKosul2 or myFiboKosul3 or myFiboKosul4 or myFiboKosul5 or myFiboKosul6 or myFiboKosul7 or myFiboKosul8 
+alertcondition(myFiboKosulu, title="Fibo Detay AL", message='Fibo Detay AL {{ticker}}, FİYAT={{close}}')
+
+myFiboKosula = myFiboKosul1a or myFiboKosul2a or myFiboKosul3a or myFiboKosul4a or myFiboKosul5a or myFiboKosul6a or myFiboKosul7a or myFiboKosul8a 
+alertcondition(myFiboKosula, title="Fib Detay SAT", message='Fib Detay SAT {{ticker}}, FİYAT={{close}}')
+
+
 
 //Tillson
 e1 = ta.ema((high + low + 2 * close) / 4, length1)
@@ -56,17 +82,17 @@ col1 = T3 > T3[1]
 col3 = T3 < T3[1]
 color_1 = col1 ? color.lime : col3 ? color.red : color.yellow
 
-alertcondition(ta.cross(T3, T3[1]) and col1, title="T3 AL", message='T3 AL {{ticker}}, FİYAT={{close}}')
-alertcondition(ta.cross(T3, T3[1]) and col3, title="T3 SAT", message='T3 SAT {{ticker}}, FİYAT={{close}}')
+//alertcondition(ta.cross(T3, T3[1]) and col1, title="T3 AL", message='T3 AL {{ticker}}, FİYAT={{close}}')
+//alertcondition(ta.cross(T3, T3[1]) and col3, title="T3 SAT", message='T3 SAT {{ticker}}, FİYAT={{close}}')
 
-plotshape(ta.cross(T3, T3[1]) and col1,title ='T3', text='T3', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=-1, size=size.small)
-plotshape(ta.cross(T3, T3[1]) and col3,title ='T3', text='T3', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.small)
+//plotshape(ta.cross(T3, T3[1]) and col1,title ='T3', text='T3', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=-1, size=size.small)
+//plotshape(ta.cross(T3, T3[1]) and col3,title ='T3', text='T3', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.small)
 
 //TSL
-resTsl = timeframe.period
-K1 = ta.valuewhen(low > low[1], low[1], 1)
-TSL = request.security(syminfo.tickerid, resTsl, K1)
-plot(TSL, linewidth=3, color=color.new(color.white, 0), title='TSL',  style =plot.style_circles)
+//resTsl = timeframe.period
+//K1 = ta.valuewhen(low > low[1], low[1], 1)
+//TSL = request.security(syminfo.tickerid, resTsl, K1)
+//plot(TSL, linewidth=3, color=color.new(color.white, 0), title='TSL',  style =plot.style_circles)
 
 //O2 TEMA 4x
 length0 = input.int(20, minval=1)
@@ -183,14 +209,13 @@ myFibKosul17a = ta.crossunder(close, line2272_2)
 myFibKosulu1 = myFibKosul1 or myFibKosul2 or myFibKosul3 or myFibKosul4 or myFibKosul5 or myFibKosul6 or myFibKosul7 or myFibKosul8 or myFibKosul9
 myFibKosulu2 = myFibKosul10 or myFibKosul11 or myFibKosul12 or myFibKosul13 or myFibKosul14 or myFibKosul15 or myFibKosul16 or myFibKosul17
 myFibKosulu = myFibKosulu1 or myFibKosulu2
-plotshape(myFibKosulu ,title ='Fib AL', text='Fib', style=shape.triangleup, location=location.belowbar, color=color.new(color.blue, 0), offset=0, size=size.normal)
 alertcondition(myFibKosulu, title="Fib AL", message='Fib AL {{ticker}}, FİYAT={{close}}')
 
 myFibKosula1 = myFibKosul1a or myFibKosul2a or myFibKosul3a or myFibKosul4a or myFibKosul5a or myFibKosul6a or myFibKosul7a or myFibKosul8a or myFibKosul9a
 myFibKosula2 = myFibKosul10a or myFibKosul11a or myFibKosul12a or myFibKosul13a or myFibKosul14a or myFibKosul15a or myFibKosul16a or myFibKosul17a
 myFibKosula = myFibKosula1 or myFibKosula2
-plotshape(myFibKosula ,title ='Fib SAT', text='Fib', style=shape.triangledown, location=location.abovebar, color=color.new(color.blue, 0), offset=0, size=size.normal)
 alertcondition(myFibKosula, title="Fib SAT", message='Fib SAT {{ticker}}, FİYAT={{close}}')
+
 
 
 //EMA9
@@ -203,21 +228,46 @@ lenWma30 = input.int(30, minval=1, title="Wma Length")
 outWma30 = ta.wma(close, lenWma30)
 pWma30 = plot(outWma30, title="WMA30", color=color.red, offset=0, linewidth=3) 
 
-fill(pEma9, pWma30, color=outEma9 >= outWma30 ? color.new(color.lime, 66) : color.new(color.red, 66))
+fill(pEma9, pWma30, color=outEma9 >= outWma30 ? color.new(color.lime, 50) : color.new(color.red, 50))
 //fill(pEma9, pWma30, color=color.new(color.lime, 75))
 
 
 
 //EMA9 ve WMA30 Kesişmesi
 ema9YukariKesWma30 = ta.crossover(outEma9, outWma30)
-plotshape(ema9YukariKesWma30 ,title ='EW AL', text='EW', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.normal)
 alertcondition(ema9YukariKesWma30, title="EW AL", message='EW AL {{ticker}}, FİYAT={{close}}')
 
+
 ema9AsagiKesWma30 = ta.crossunder(outEma9, outWma30)
-plotshape(ema9AsagiKesWma30 ,title ='EW SAT', text='EW', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.normal)
 alertcondition(ema9AsagiKesWma30, title="EW SAT", message='EW SAT {{ticker}}, FİYAT={{close}}')
 
+
+
 //alertcondition(ema9YukariKesWma30 or ema9AsagiKesWma30, title="EW ALSAT", message='EW ALSAT {{ticker}}, FİYAT={{close}}')
+
+//WMA30 => close
+//wma30CloseY = ta.crossover(close, outWma30)
+//plotshape(wma30CloseY ,title ='W30 AL', text='W30', style=shape.triangleup, location=location.belowbar, color=color.new(color.red, 0), offset=0, size=size.small)
+//alertcondition(wma30CloseY, title="W30 AL", message='W30 AL {{ticker}}, FİYAT={{close}}')
+
+//wma30CloseA = ta.crossunder(close, outWma30)
+//plotshape(wma30CloseA ,title ='W30 SAT', text='W30', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
+//alertcondition(wma30CloseA, title="W30 SAT", message='W30 SAT {{ticker}}, FİYAT={{close}}')
+
+//ema9 => close
+//ema9CloseY = ta.crossover(close, outEma9)
+//plotshape(ema9CloseY ,title ='E9 AL', text='E9', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.tiny)
+//alertcondition(ema9CloseY, title="E9 AL", message='E9 AL {{ticker}}, FİYAT={{close}}')
+
+//ema9CloseA = ta.crossunder(close, outEma9)
+//plotshape(ema9CloseA ,title ='E9 SAT', text='E9', style=shape.triangledown, location=location.abovebar, color=color.new(color.lime, 0), offset=0, size=size.tiny)
+//alertcondition(ema9CloseA, title="E9 SAT", message='E9 SAT {{ticker}}, FİYAT={{close}}')
+
+
+//ema9 => dema200
+//ema9Dema4A = ta.crossunder(outEma9, dema4)
+//plotshape(ema9Dema4A ,title ='ED SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
+//alertcondition(ema9Dema4A, title="ED SAT", message='ED SAT {{ticker}}, FİYAT={{close}}')
 
 //ema9 => dema200
 //ema9Dema4 = ta.crossover(outEma9, dema4)
@@ -241,19 +291,31 @@ alertcondition(ema9AsagiKesWma30, title="EW SAT", message='EW SAT {{ticker}}, F�
 
 
 //DEMA Son
-sartD020 = ta.crossover(close, dema1) and close > dema1 
-sartD050 = ta.crossover(close, dema2) and close > dema2
-sartD100 = ta.crossover(close, dema3) and close > dema3
-sartD200 = ta.crossover(close, dema4) and close > dema4
-sartDANY = sartD020 or sartD050 or sartD100 or sartD200
-plotshape(sartDANY ,title ='TEMA AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
-alertcondition(sartDANY, title="TEMA AL", message='TEMA AL {{ticker}}, FİYAT={{close}}')
+//sartD020 = ta.crossover(close, dema1) and close > dema1 
+//sartD050 = ta.crossover(close, dema2) and close > dema2
+//sartD100 = ta.crossover(close, dema3) and close > dema3
+//sartD200 = ta.crossover(close, dema4) and close > dema4
+//sartDANY = sartD020 or sartD050 or sartD100 or sartD200
+//plotshape(sartDANY ,title ='TEMA AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.tiny)
+//alertcondition(sartDANY, title="TEMA AL", message='TEMA AL {{ticker}}, FİYAT={{close}}')
 
-sartD020a = ta.crossunder(close, dema1) and close <= dema1 
-sartD050a = ta.crossunder(close, dema2) and close <= dema2
-sartD100a = ta.crossunder(close, dema3) and close <= dema3
-sartD200a = ta.crossunder(close, dema4) and close <= dema4
-sartDANYa = sartD020a or sartD050a or sartD100a or sartD200a
-plotshape(sartDANYa ,title ='TEMA SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
-alertcondition(sartDANYa, title="TEMA SAT", message='TEMA ANY SAT {{ticker}}, FİYAT={{close}}')
+//sartD020a = ta.crossunder(close, dema1) and close <= dema1 
+//sartD050a = ta.crossunder(close, dema2) and close <= dema2
+//sartD100a = ta.crossunder(close, dema3) and close <= dema3
+//sartD200a = ta.crossunder(close, dema4) and close <= dema4
+//sartDANYa = sartD020a or sartD050a or sartD100a or sartD200a
+//plotshape(sartDANYa ,title ='TEMA SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.tiny)
+//alertcondition(sartDANYa, title="TEMA SAT", message='TEMA ANY SAT {{ticker}}, FİYAT={{close}}')
+
+
+plotshape(ema9YukariKesWma30 ,title ='EW AL', text='EW', style=shape.triangleup, location=location.belowbar, color=color.new(color.blue, 0), offset=0, size=size.large)
+plotshape(ema9AsagiKesWma30 ,title ='EW SAT', text='EW', style=shape.triangledown, location=location.abovebar, color=color.new(color.blue, 0), offset=0, size=size.large)
+
+plotshape(myFibKosulu ,title ='Fib AL', text='Fib', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.normal)
+plotshape(myFibKosula ,title ='Fib SAT', text='Fib', style=shape.triangledown, location=location.abovebar, color=color.new(color.lime, 0), offset=0, size=size.normal)
+
+plotshape(myFiboKosulu ,title ='Fibo Detay AL', text='Fd', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+plotshape(myFiboKosula ,title ='Fib Detay SAT', text='Fd', style=shape.triangledown, location=location.abovebar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+
+
 ///HEDEFE VARDI
