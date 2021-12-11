@@ -1,9 +1,50 @@
 //O2can O2bek (Özcan Özbek)
 //@version=5
 indicator(title='myPyramid - V1', shorttitle='myPyramid - V1', overlay=true, timeframe="")
+
+
+//aç kapa
+acTema20 = input(defval = true, title = 'Tema20')   
+acTema50 = input(defval = false, title = 'Tema50')   
+acTema100 = input(defval = false, title = 'Tema100')   
+acTema200 = input(defval = true, title = 'Tema200')   
+
+acFIBOTOP4 = input(defval = false, title='Fibo Üst-4')
+acFIBOTOP3 = input(defval = false, title='Fibo Üst-3')
+acFIBOTOP2 = input(defval = false, title='Fibo Üst-2')
+acFIBOTOP1 = input(defval = false, title='Fibo Üst-1')
+acFIBOBOT1 = input(defval = false, title='Fibo Alt-1')
+acFIBOBOT2 = input(defval = false, title='Fibo Alt-2')
+acFIBOBOT3 = input(defval = false, title='Fibo Alt-3')
+acFIBOBOT4 = input(defval = false, title='Fibo Alt-4')
+
+acTSL = input(defval = false, title = 'TSL')   
+
+acTemaAl = input(defval = false, title = 'Tema AL')   
+acTemaSat = input(defval = false, title = 'Tema SAT')   
+
+acFiboDetayAl = input(defval = false, title = 'Fibo Detay AL')   
+acFiboDetaySat = input(defval = false, title = 'Fibo Detay SAT')   
+
+acFibDivAl = input(defval = false, title = 'Fib Div AL')   
+acFibDivSat = input(defval = false, title = 'Fib Div SAT')   
+
+acFibAl = input(defval = true, title = 'Fib AL')   
+acFibSat = input(defval = true, title = 'Fib SAT')   
+
+acEwAl = input(defval = false, title = 'EW AL')   
+acEwSat = input(defval = false, title = 'EW SAT')   
+
+//acEma9 = input(defval = true, title = 'Ema 9')   
+//acWma30 = input(defval = false, title = 'Wma 30')   
+
+
 src = input(close, title='Source')
-length1 = input(3, 'T3 Length')
-a1 = input(0.5, 'Volume Factor')
+length1 = 3 //input(3, 'T3 Length')
+a1 = 0.5 //input(0.5, 'Volume Factor')
+
+
+
 
 //FBANDS
 EMAperiod = input.int(14, title='EMAperiod', minval=1, maxval=500)
@@ -28,14 +69,14 @@ FIBOBOT2 = EMA - R2
 FIBOBOT3 = EMA - R3
 FIBOBOT4 = EMA - R4
 
-plot(FIBOTOP4, title='Fibo Üst-4', linewidth=1, color=color.new(color.white, 0))
-plot(FIBOTOP3, title='Fibo Üst-3', linewidth=1, color=color.new(color.lime, 0))
-plot(FIBOTOP2, title='Fibo Üst-2', linewidth=1, color=color.new(color.orange, 0))
-plot(FIBOTOP1, title='Fibo Üst-1', linewidth=1, color=color.new(color.yellow, 0))
-plot(FIBOBOT1, title='Fibo Alt-1', linewidth=1, color=color.new(color.yellow, 0))
-plot(FIBOBOT2, title='Fibo Alt-2', linewidth=1, color=color.new(color.orange, 0))
-plot(FIBOBOT3, title='Fibo Alt-3', linewidth=1, color=color.new(color.lime, 0))
-plot(FIBOBOT4, title='Fibo Alt-4', linewidth=1, color=color.new(color.white, 0))
+plot(FIBOTOP4 and acFIBOTOP4 ? FIBOTOP4 : na, title='Fibo Üst-4', linewidth=1, color=color.new(color.white, 0))
+plot(FIBOTOP3 and acFIBOTOP3 ? FIBOTOP3 : na, title='Fibo Üst-3', linewidth=1, color=color.new(color.lime, 0))
+plot(FIBOTOP2 and acFIBOTOP2 ? FIBOTOP2 : na, title='Fibo Üst-2', linewidth=1, color=color.new(color.orange, 0))
+plot(FIBOTOP1 and acFIBOTOP1 ? FIBOTOP1 : na, title='Fibo Üst-1', linewidth=1, color=color.new(color.yellow, 0))
+plot(FIBOBOT1 and acFIBOBOT1 ? FIBOBOT1 : na, title='Fibo Alt-1', linewidth=1, color=color.new(color.yellow, 0))
+plot(FIBOBOT2 and acFIBOBOT2 ? FIBOBOT2 : na, title='Fibo Alt-2', linewidth=1, color=color.new(color.orange, 0))
+plot(FIBOBOT3 and acFIBOBOT3 ? FIBOBOT3 : na, title='Fibo Alt-3', linewidth=1, color=color.new(color.lime, 0))
+plot(FIBOBOT4 and acFIBOBOT4 ? FIBOBOT4 : na, title='Fibo Alt-4', linewidth=1, color=color.new(color.white, 0))
 
 myFiboKosul1 = ta.crossover(close, FIBOTOP4)
 myFiboKosul2 = ta.crossover(close, FIBOTOP3)
@@ -92,43 +133,135 @@ color_1 = col1 ? color.lime : col3 ? color.red : color.yellow
 //plotshape(ta.cross(T3, T3[1]) and col1,title ='T3', text='T3', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=-1, size=size.small)
 //plotshape(ta.cross(T3, T3[1]) and col3,title ='T3', text='T3', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.small)
 
-//TSL
-//resTsl = timeframe.period
-//K1 = ta.valuewhen(low > low[1], low[1], 1)
-//TSL = request.security(syminfo.tickerid, resTsl, K1)
-//plot(TSL, linewidth=3, color=color.new(color.white, 0), title='TSL',  style =plot.style_circles)
 
 //O2 TEMA 4x
-length0 = input.int(20, minval=1)
+length0 = 20 //input.int(20, minval=1)
 e11 = ta.ema(src, length0)
 e12 = ta.ema(e11, length0)
 e13 = ta.ema(e12, length0)
 dema1 = 3 * (e11 - e12) + e13  //tema20
-plot(dema1, 'Tema 20', color=color.new(color.white, 0), linewidth=2)
+plot(dema1 and acTema20 ? dema1 : na, 'Tema 20', color=color.new(color.white, 0), linewidth=2)
 
-length2 = input.int(50, minval=1)
+length2 = 50 //input.int(50, minval=1)
 e21 = ta.ema(src, length2)
 e22 = ta.ema(e21, length2)
 e23 = ta.ema(e22, length2)
 dema2 = 3 * (e21 - e22) + e23  //tema50 
-plot(dema2, 'Tema 50', color=color.new(color.yellow, 0), linewidth=3)
+plot(dema2 and acTema50 ? dema2 : na, 'Tema 50', color=color.new(color.yellow, 0), linewidth=3)
 
-length3 = input.int(100, minval=1)
+length3 = 100 //input.int(100, minval=1)
 e31 = ta.ema(src, length3)
 e32 = ta.ema(e31, length3)
 e33 = ta.ema(e32, length3)
 dema3 = 3 * (e31 - e32) + e33    //tema100
-plot(dema3, 'Tema 100', color=color.new(color.lime, 0), linewidth=3)
+plot(dema3 and acTema100 ? dema3 : na, 'Tema 100', color=color.new(color.lime, 0), linewidth=3)
 
-length4 = input.int(200, minval=1)
+length4 = 200 //input.int(200, minval=1)
 e41 = ta.ema(src, length4)
 e42 = ta.ema(e41, length4)
 e43 = ta.ema(e42, length4)
 dema4 = 3 * (e41 - e42) + e43    //tema200
-plot(dema4, 'Tema 200', color=color.new(color.blue, 0), linewidth=4)
+plot(dema4 and acTema200 ? dema4 : na, 'Tema 200', color=color.new(color.blue, 0), linewidth=4)
+
+//FibDiv
+source = src
+long_term_div = input(true, title='Use long term divergences?')
+div_lookback_period = input.int(55, minval=1, title='Lookback Period')
+fastLength = input.int(12, minval=1, title='PPO Fast')
+slowLength = input.int(26, minval=1, title='PPO Slow')
+signalLength = input.int(9, minval=1, title='PPO Signal')
+smoother = input.int(2, minval=1, title='PPO Smooth')
+fastMA = ta.ema(source, fastLength)
+slowMA = ta.ema(source, slowLength)
+macd = fastMA - slowMA
+macd2 = macd / slowMA * 100
+d = ta.sma(macd2, smoother)  // smoothing PPO
+
+bullishPrice = low
+
+priceMins = bullishPrice > bullishPrice[1] and bullishPrice[1] < bullishPrice[2] or low[1] == low[2] and low[1] < low and low[1] < low[3] or low[1] == low[2] and low[1] == low[3] and low[1] < low and low[1] < low[4] or low[1] == low[2] and low[1] == low[3] and low[1] and low[1] == low[4] and low[1] < low and low[1] < low[5]  // this line identifies bottoms and plateaus in the price
+oscMins = d > d[1] and d[1] < d[2]  // this line identifies bottoms in the PPO
+
+BottomPointsInPPO = oscMins
+
+bearishPrice = high
+priceMax = bearishPrice < bearishPrice[1] and bearishPrice[1] > bearishPrice[2] or high[1] == high[2] and high[1] > high and high[1] > high[3] or high[1] == high[2] and high[1] == high[3] and high[1] > high and high[1] > high[4] or high[1] == high[2] and high[1] == high[3] and high[1] and high[1] == high[4] and high[1] > high and high[1] > high[5]  // this line identifies tops in the price
+oscMax = d < d[1] and d[1] > d[2]  // this line identifies tops in the PPO
+
+TopPointsInPPO = oscMax
+
+currenttrough4 = ta.valuewhen(oscMins, d[1], 0)  // identifies the value of PPO at the most recent BOTTOM in the PPO
+lasttrough4 = ta.valuewhen(oscMins, d[1], 1)  // NOT USED identifies the value of PPO at the second most recent BOTTOM in the PPO
+currenttrough5 = ta.valuewhen(oscMax, d[1], 0)  // identifies the value of PPO at the most recent TOP in the PPO
+lasttrough5 = ta.valuewhen(oscMax, d[1], 1)  // NOT USED identifies the value of PPO at the second most recent TOP in the PPO
+
+currenttrough6 = ta.valuewhen(priceMins, low[1], 0)  // this line identifies the low (price) at the most recent bottom in the Price
+lasttrough6 = ta.valuewhen(priceMins, low[1], 1)  // NOT USED this line identifies the low (price) at the second most recent bottom in the Price
+currenttrough7 = ta.valuewhen(priceMax, high[1], 0)  // this line identifies the high (price) at the most recent top in the Price
+lasttrough7 = ta.valuewhen(priceMax, high[1], 1)  // NOT USED this line identifies the high (price) at the second most recent top in the Price
+
+delayedlow = priceMins and ta.barssince(oscMins) < 3 ? low[1] : na
+delayedhigh = priceMax and ta.barssince(oscMax) < 3 ? high[1] : na
+
+// only take tops/bottoms in price when tops/bottoms are less than 5 bars away
+filter = ta.barssince(priceMins) < 5 ? ta.lowest(currenttrough6, 4) : na
+filter2 = ta.barssince(priceMax) < 5 ? ta.highest(currenttrough7, 4) : na
+
+//delayedbottom/top when oscillator bottom/top is earlier than price bottom/top
+y11 = ta.valuewhen(oscMins, delayedlow, 0)
+y12 = ta.valuewhen(oscMax, delayedhigh, 0)
+
+// only take tops/bottoms in price when tops/bottoms are less than 5 bars away, since 2nd most recent top/bottom in osc
+y2 = ta.valuewhen(oscMax, filter2, 1)  // identifies the highest high in the tops of price with 5 bar lookback period SINCE the SECOND most recent top in PPO
+y6 = ta.valuewhen(oscMins, filter, 1)  // identifies the lowest low in the bottoms of price with 5 bar lookback period SINCE the SECOND most recent bottom in PPO
+
+long_term_bull_filt = ta.valuewhen(priceMins, ta.lowest(div_lookback_period), 1)
+long_term_bear_filt = ta.valuewhen(priceMax, ta.highest(div_lookback_period), 1)
+
+y3 = ta.valuewhen(oscMax, currenttrough5, 0)  // identifies the value of PPO in the most recent top of PPO 
+y4 = ta.valuewhen(oscMax, currenttrough5, 1)  // identifies the value of PPO in the second most recent top of PPO 
+
+y7 = ta.valuewhen(oscMins, currenttrough4, 0)  // identifies the value of PPO in the most recent bottom of PPO
+y8 = ta.valuewhen(oscMins, currenttrough4, 1)  // identifies the value of PPO in the SECOND most recent bottom of PPO
+
+y9 = ta.valuewhen(oscMins, currenttrough6, 0)
+y10 = ta.valuewhen(oscMax, currenttrough7, 0)
+
+bulldiv = BottomPointsInPPO ? d[1] : na  // plots dots at bottoms in the PPO
+beardiv = TopPointsInPPO ? d[1] : na  // plots dots at tops in the PPO
+
+i = currenttrough5 < ta.highest(d, div_lookback_period)  // long term bearish oscilator divergence
+i2 = y10 > long_term_bear_filt  // long term bearish top divergence
+i3 = delayedhigh > long_term_bear_filt  // long term bearish delayedhigh divergence
+
+i4 = currenttrough4 > ta.lowest(d, div_lookback_period)  // long term bullish osc divergence
+i5 = y9 < long_term_bull_filt  // long term bullish bottom div
+i6 = delayedlow < long_term_bull_filt  // long term bullish delayedbottom div
+
+
+bearishdiv1 = y10 > y2 and oscMax and y3 < y4 ? true : false
+bearishdiv2 = delayedhigh > y2 and y3 < y4 ? true : false
+bearishdiv3 = long_term_div and oscMax and i and i2 ? true : false
+bearishdiv4 = long_term_div and i and i3 ? true : false
+
+bullishdiv1 = y9 < y6 and oscMins and y7 > y8 ? true : false
+bullishdiv2 = delayedlow < y6 and y7 > y8 ? true : false
+bullishdiv3 = long_term_div and oscMins and i4 and i5 ? true : false
+bullishdiv4 = long_term_div and i4 and i6 ? true : false
+
+bearish = bearishdiv1 or bearishdiv2 or bearishdiv3 or bearishdiv4
+bullish = bullishdiv1 or bullishdiv2 or bullishdiv3 or bullishdiv4
+
+greendot = beardiv != 0 ? true : false
+reddot = bulldiv != 0 ? true : false
+
+alertcondition(reddot, title='Fib Div Al', message='Fib Div  AL {{ticker}}, FİYAT={{close}}')
+alertcondition(greendot, title='Fib Div Sat', message='Fib Div SAT {{ticker}}, FİYAT={{close}}')
+
 
 //Fiblines
-len = input(title='Period', defval=200)
+len = 200
+//len = input(title='Period', defval=200)
 fractal_top = 0.0
 fractal_top := high < high[2] and high[1] < high[2] and high[3] < high[2] and high[4] < high[2] ? high[2] : fractal_top[1]
 fractal_bottom = 0.0
@@ -222,17 +355,23 @@ alertcondition(myFibKosula, title="Fib SAT", message='Fib SAT {{ticker}}, FİYAT
 
 
 
+
+
 //EMA9
-lenEma9 = input.int(9, minval=1, title="Ema Length")
+lenEma9 = 9
+//lenEma9 = input.int(9, minval=1, title="Ema Length")
 outEma9 = ta.ema(close, lenEma9)
-pEma9 = plot(outEma9, title="EMA9", color=color.lime, offset=0, linewidth=2, style=plot.style_circles)
+pEma9 = plot(outEma9, title="EMA9", color=color.new(color.lime, 0), offset=0, linewidth=2, style=plot.style_circles)
+
+
 
 //WMA30
-lenWma30 = input.int(30, minval=1, title="Wma Length")
+lenWma30 = 30
+//lenWma30 = input.int(30, minval=1, title="Wma Length")
 outWma30 = ta.wma(close, lenWma30)
-pWma30 = plot(outWma30, title="WMA30", color=color.red, offset=0, linewidth=3) 
+pWma30 = plot(outWma30, title="WMA30", color=color.new(color.red, 0), offset=0, linewidth=2, style=plot.style_circles) 
 
-fill(pEma9, pWma30, color=outEma9 >= outWma30 ? color.new(color.lime, 50) : color.new(color.red, 50))
+fill(pEma9, pWma30,title = 'Trend Bölgesi', color=outEma9 >= outWma30 ? color.new(color.lime, 50) : color.new(color.red, 50))
 //fill(pEma9, pWma30, color=color.new(color.lime, 75))
 
 
@@ -310,18 +449,22 @@ sartDANYa = sartD020a or sartD050a or sartD100a or sartD200a
 alertcondition(sartDANYa, title="TEMA SAT", message='TEMA ANY SAT {{ticker}}, FİYAT={{close}}')
 
 
-plotshape(ema9YukariKesWma30 ,title ='EW AL', text='EW', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.large)
-plotshape(ema9AsagiKesWma30 ,title ='EW SAT', text='EW', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.large)
+plotshape(ema9YukariKesWma30 and acEwAl ? ema9YukariKesWma30 : na ,title ='EW AL', text='EW', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.large)
+plotshape(ema9AsagiKesWma30 and acEwSat ? ema9AsagiKesWma30 : na ,title ='EW SAT', text='EW', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.large)
 
-plotshape(myFibKosulu ,title ='Fib AL', text='Fib', style=shape.triangleup, location=location.belowbar, color=color.new(color.blue, 0), offset=0, size=size.normal)
-plotshape(myFibKosula ,title ='Fib SAT', text='Fib', style=shape.triangledown, location=location.abovebar, color=color.new(color.blue, 0), offset=0, size=size.normal)
+plotshape(reddot and acFibDivAl ? d : na, title = 'Fib Div AL', text='Fib Div', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=-1, size=size.large)
+plotshape(greendot and acFibDivSat ? d : na,title ='Fib Div SAT' , text='Fib Div', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.large)
 
-plotshape(myFiboKosulu ,title ='Fibo Detay AL', text='Fd', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
-plotshape(myFiboKosula ,title ='Fib Detay SAT', text='Fd', style=shape.triangledown, location=location.abovebar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+plotshape(myFibKosulu and acFibAl ? myFibKosulu : na ,title ='Fib AL', text='Fib', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.normal)
+plotshape(myFibKosula and acFibSat ? myFibKosula : na ,title ='Fib SAT', text='Fib', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.normal)
 
-plotshape(sartDANY ,title ='TEMA AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
-plotshape(sartDANYa ,title ='TEMA SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+plotshape(myFiboKosulu and acFiboDetayAl ? myFiboKosulu : na ,title ='Fibo Detay AL', text='Fd', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
+plotshape(myFiboKosula and acFiboDetaySat ? myFiboKosula : na ,title ='Fib Detay SAT', text='Fd', style=shape.triangledown, location=location.abovebar, color=color.new(color.white, 0), offset=0, size=size.tiny)
 
-plot(TSL, linewidth=2, color=color.new(color.orange, 0), title='TSL',  style =plot.style_circles)
+plotshape(sartDANY and acTemaAl ? sartDANY : na ,title ='TEMA AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+plotshape(sartDANYa and acTemaSat ? sartDANYa : na ,title ='TEMA SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+
+plot(TSL and acTSL ? TSL : na, linewidth=2, color=color.new(color.orange, 0), title='TSL',  style =plot.style_circles)
+
 
 ///HEDEFE VARDI
