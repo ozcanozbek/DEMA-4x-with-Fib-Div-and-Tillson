@@ -1,22 +1,24 @@
 //O2can O2bek (Özcan Özbek)
 //@version=5
-indicator(title='Piramid - V1.2', shorttitle='Piramid - V1.2', overlay=true, timeframe="")
+indicator(title='Piramid - V1.3.1', shorttitle='Piramid - V1.3.1', overlay=true, timeframe="")
 
 
 //aç kapa
 
-acEwWma = input(defval = false, title = 'Ema9 Wma30 Göstergeleri')   
-acEwAlSat = input(defval = false, title = 'EW AL-SAT')   
+acUA = input(defval = true, title = 'Üst Alt Çizgiler')   
 
-acFibDivAlSat = input(defval = true, title = 'Fib Div AL-SAT')   
+acEwWma = input(defval = true, title = 'Ema9 Wma30 Göstergeleri')   
+acEwAlSat = input(defval = true, title = 'EW AL-SAT')   
+
+acFibDivAlSat = input(defval = false, title = 'Fib Div AL-SAT')   
 
 acFibo = input(defval = false, title='Fibo Fband Çizgileri')
 acFiboDetayAlSat = input(defval = false, title = 'Fibo Fband AL-SAT')   
 
 acFiboLines = input(defval = true, title = 'Fib Yatay Çizgileri')   
-acFibAlSat = input(defval = false, title = 'Fib Yatay Çizgi AL-SAT')   
+acFibAlSat = input(defval = true, title = 'Fib Yatay Çizgi AL-SAT')   
 
-acTema = input(defval = true, title = 'Tema Çizgileri')   
+acTema = input(defval = false, title = 'Tema Çizgileri')   
 acTemaAlSat = input(defval = true, title = 'Tema AL-SAT')   
 
 acT3 = input(defval = false, title = 'T3 - Tillson Çizgisi')  
@@ -25,12 +27,18 @@ acT3AlSat = input(defval = false, title = 'T3 - Tillson AL-SAT')
 acTSL = input(defval = false, title = 'TSL')   
 
 
-src = input(close, title='Source')
+src = close //input(close, title='Source')
 length1 = 3 //input(3, 'T3 Length')
 a1 = 0.5 //input(0.5, 'Volume Factor')
 
 
-
+//DC
+lenUA = 40
+ustUA = ta.highest(lenUA)
+altUA = ta.lowest(lenUA)
+uUA = plot(ustUA and acUA ? ustUA : na, "Üst Çizgi", color=color.yellow, linewidth=2)
+aUA = plot(altUA and acUA ? altUA : na, "Alt Çizgi", color=color.green, linewidth=2)
+//fill(u, l, color=color.rgb(33, 150, 243, 95), title="Background")
 
 //FBANDS
 EMAperiod = input.int(14, title='EMAperiod', minval=1, maxval=500)
@@ -120,6 +128,7 @@ plotshape(ta.cross(T3, T3[1]) and col1 and acT3AlSat ,title ='T3 AL', text='T3',
 plotshape(ta.cross(T3, T3[1]) and col3 and acT3AlSat ,title ='T3 SAT', text='T3', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.small)
 
 
+
 //O2 TEMA 4x
 length0 = 20 //input.int(20, minval=1)
 e11 = ta.ema(src, length0)
@@ -140,14 +149,14 @@ e31 = ta.ema(src, length3)
 e32 = ta.ema(e31, length3)
 e33 = ta.ema(e32, length3)
 dema3 = 3 * (e31 - e32) + e33    //tema100
-plot(dema3 and acTema ? dema3 : na, 'Tema 100', color=color.new(color.orange, 0), linewidth=3)
+plot(dema3 and acTema ? dema3 : na, 'Tema 100', color=color.new(color.blue, 0), linewidth=3)
 
 length4 = 200 //input.int(200, minval=1)
 e41 = ta.ema(src, length4)
 e42 = ta.ema(e41, length4)
 e43 = ta.ema(e42, length4)
 dema4 = 3 * (e41 - e42) + e43    //tema200
-plot(dema4 and acTema ? dema4 : na, 'Tema 200', color=color.new(color.blue, 0), linewidth=4)
+plot(dema4 and acTema ? dema4 : na, 'Tema 200', color=color.new(#be660b, 0), linewidth=4)
 
 //FibDiv
 source = src
@@ -274,23 +283,24 @@ line1618_2 = srcHigh - diff * 1.618
 line2000_2 = srcHigh - diff * 2.000
 line2272_2 = srcHigh - diff * 2.272
 
-plot(line0000 and acFiboLines ? line0000 : na, title='0.000', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line0236 and acFiboLines ? line0236 : na, title='0.236', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line0382 and acFiboLines ? line0382 : na, title='0.382', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line0500 and acFiboLines ? line0500 : na, title='0.500', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line0618 and acFiboLines ? line0618 : na, title='0.618', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line0786 and acFiboLines ? line0786 : na, title='0.786', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line1000 and acFiboLines ? line1000 : na, title='1.000', color=color.new(#2E9AFE, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line1272 and acFiboLines ? line1272 : na, title='1.272', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line1414 and acFiboLines ? line1414 : na, title='1.414', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line1618 and acFiboLines ? line1618 : na, title='1.618', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line2000 and acFiboLines ? line2000 : na, title='2.000', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line2272 and acFiboLines ? line2272 : na, title='2.272', color=color.new(color.green, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line1272_2 and acFiboLines ? line1272_2 : na, title='-0.272', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line1414_2 and acFiboLines ? line1414_2 : na, title='-0.414', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line1618_2 and acFiboLines ? line1618_2 : na, title='-0.618', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line2000_2 and acFiboLines ? line2000_2 : na, title='-1.000', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
-plot(line2272_2 and acFiboLines ? line2272_2 : na, title='-1.272', color=color.new(color.red, 33), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0000 and acFiboLines ? line0000 : na, title='0.000', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0236 and acFiboLines ? line0236 : na, title='0.236', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0382 and acFiboLines ? line0382 : na, title='0.382', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0500 and acFiboLines ? line0500 : na, title='0.500', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0618 and acFiboLines ? line0618 : na, title='0.618', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0786 and acFiboLines ? line0786 : na, title='0.786', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1000 and acFiboLines ? line1000 : na, title='1.000', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1272 and acFiboLines ? line1272 : na, title='1.272', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1414 and acFiboLines ? line1414 : na, title='1.414', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1618 and acFiboLines ? line1618 : na, title='1.618', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2000 and acFiboLines ? line2000 : na, title='2.000', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2272 and acFiboLines ? line2272 : na, title='2.272', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1272_2 and acFiboLines ? line1272_2 : na, title='-0.272', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1414_2 and acFiboLines ? line1414_2 : na, title='-0.414', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1618_2 and acFiboLines ? line1618_2 : na, title='-0.618', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2000_2 and acFiboLines ? line2000_2 : na, title='-1.000', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2272_2 and acFiboLines ? line2272_2 : na, title='-1.272', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+
 
 myFibKosul1 = ta.crossover(close, line0000)
 myFibKosul2 = ta.crossover(close, line0236)
@@ -347,7 +357,7 @@ alertcondition(myFibKosula, title="Fib Yatay Çizgi SAT", message='Fib Yatay Çi
 lenEma9 = 9
 //lenEma9 = input.int(9, minval=1, title="Ema Length")
 outEma9 = ta.ema(close, lenEma9)
-pEma9 = plot(outEma9 and acEwWma ? outEma9 : na, title="EMA9", color=color.new(color.lime, 0), offset=0, linewidth=2, style=plot.style_circles)
+pEma9 = plot(outEma9 and acEwWma ? outEma9 : na, title="EMA9", color=color.new(color.lime, 100), offset=0, linewidth=2, style=plot.style_circles)
 
 
 
@@ -355,7 +365,7 @@ pEma9 = plot(outEma9 and acEwWma ? outEma9 : na, title="EMA9", color=color.new(c
 lenWma30 = 30
 //lenWma30 = input.int(30, minval=1, title="Wma Length")
 outWma30 = ta.wma(close, lenWma30)
-pWma30 = plot(outWma30 and acEwWma ? outWma30 : na, title="WMA30", color=color.new(color.red, 0), offset=0, linewidth=2, style=plot.style_circles) 
+pWma30 = plot(outWma30 and acEwWma ? outWma30 : na, title="WMA30", color=color.new(color.red, 100), offset=0, linewidth=2, style=plot.style_circles) 
 
 fill(pEma9, pWma30, title = 'Trend Bölgesi', color=outEma9 >= outWma30 ? color.new(color.lime, 50) : color.new(color.red, 50))
 //fill(pEma9, pWma30, color=color.new(color.lime, 75))
@@ -437,23 +447,23 @@ alertcondition(sartDANYa, title="Temalar SAT", message='Temalar SAT {{ticker}}, 
 //Tillson Plot
 plot(T3 and acT3 ? T3 : na, color=color_1, linewidth=3, title='T3')
 
-
 plotshape(ema9YukariKesWma30 and acEwAlSat ? ema9YukariKesWma30 : na ,title ='EW AL', text='EW', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.large)
 plotshape(ema9AsagiKesWma30 and acEwAlSat ? ema9AsagiKesWma30 : na ,title ='EW SAT', text='EW', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.large)
 
 plotshape(reddot and acFibDivAlSat ? d : na, title = 'Fib Div AL', text='Fdiv', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=-1, size=size.large)
 plotshape(greendot and acFibDivAlSat ? d : na,title ='Fib Div SAT' , text='Fdiv', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=-1, size=size.large)
 
-plotshape(myFibKosulu and acFibAlSat ? myFibKosulu : na ,title ='Fib Yatay Çizgi AL', text='Fçiz', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.normal)
-plotshape(myFibKosula and acFibAlSat ? myFibKosula : na ,title ='Fib Yatay Çizgi SAT', text='Fçiz', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.normal)
+plotshape(myFibKosulu and acFibAlSat ? myFibKosulu : na ,title ='Fib Yatay Çizgi AL', text='Fçiz', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
+plotshape(myFibKosula and acFibAlSat ? myFibKosula : na ,title ='Fib Yatay Çizgi SAT', text='Fçiz', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
 
 plotshape(myFiboKosulu and acFiboDetayAlSat ? myFiboKosulu : na ,title ='Fibo Band AL', text='Fbnd', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
 plotshape(myFiboKosula and acFiboDetayAlSat ? myFiboKosula : na ,title ='Fibo Band SAT', text='Fbnd', style=shape.triangledown, location=location.abovebar, color=color.new(color.white, 0), offset=0, size=size.tiny)
 
-plotshape(sartDANY and acTemaAlSat ? sartDANY : na ,title ='Temalar AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+plotshape(sartDANY and acTemaAlSat ? sartDANY : na ,title ='Temalar AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.tiny)
 plotshape(sartDANYa and acTemaAlSat ? sartDANYa : na ,title ='Temalar SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.tiny)
 
 plot(TSL and acTSL ? TSL : na, linewidth=2, color=color.new(color.orange, 0), title='TSL',  style =plot.style_circles)
+
 
 
 ///HEDEFE VARDI
