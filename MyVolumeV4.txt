@@ -1,9 +1,10 @@
 //@version=5
-indicator(title='MyVolume V4', shorttitle='MyVolume V4', format=format.volume, timeframe="")
+indicator(title='MyVolume V4.1', shorttitle='MyVolume V4.1', format=format.volume, timeframe="")
 
 myOpen = request.security(syminfo.tickerid, timeframe.period, open)
 myClose = request.security(syminfo.tickerid, timeframe.period, close)
 myVolume = request.security(syminfo.tickerid, timeframe.period, volume)
+
 
 
 
@@ -55,24 +56,68 @@ degerle(bas, bit, vol) =>
     [yonu, degeri, rengi]
 
 
+dususDegerle(bas, bit, vol) =>
+
+    myOrtalama = ta.sma(vol, 21)
+
+    yonu = if(bas < bit)
+        0
+    else
+        1
+    
+
+    [degeri, rengi] = if vol <= myOrtalama
+        //0
+        [0, color.new(color.white, 30)]
+    else
+        if vol < myOrtalama and vol <= (myOrtalama * 2) 
+            //1  //Volume
+            [1, color.new(color.yellow, 0)]
+        else
+            if vol < (myOrtalama * 2) and vol <= (myOrtalama * 3) 
+                //2 //2X 
+                [2, color.new(#00bcd4, 0)]
+            else
+                if vol < (myOrtalama * 3) and vol <= (myOrtalama * 4) 
+                    //3 //3X
+                    [3, color.new(color.green, 0) ]
+                else
+                    //4 //3X+
+                    [4, color.new(color.lime, 0)]
+                    
+    if yonu==0 
+        rengi := color.new(color.red, 40)
+                    
+    [yonu, degeri, rengi]
+
+
 [yon, deger, renk] = degerle(myOpen, myClose, myVolume)
+[yonD, degerD, renkD] = dususDegerle(myOpen, myClose, myVolume)
 
 
-alertcondition(deger == 1, title='Volume 1X', message='Volume 1X 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(deger == 2, title='Volume 2X', message='Volume 2X 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(deger == 3, title='Volume 3X', message='Volume 3X 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(deger == 4, title='Volume 3X+', message='Volume 3X+ 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(deger >= 1, title='Volume 1X+', message='Volume 1X+ {{ticker}}, FİYAT={{close}}')
+alertcondition(deger == 1, title='Volume 1X', message='Volume 1X {{ticker}}, FİYAT={{close}}')
+alertcondition(deger == 2, title='Volume 2X', message='Volume 2X {{ticker}}, FİYAT={{close}}')
+alertcondition(deger >= 2, title='Volume 2X+', message='Volume 2X+ {{ticker}}, FİYAT={{close}}')
+alertcondition(deger == 3, title='Volume 3X', message='Volume 3X {{ticker}}, FİYAT={{close}}')
+alertcondition(deger == 4, title='Volume 3X+', message='Volume 3X+ {{ticker}}, FİYAT={{close}}')
 
 
-alertcondition(yon== 1 and deger == 1, title='Volume 1X AL', message='Volume 1X AL 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(yon== 1 and deger == 2, title='Volume 2X AL', message='Volume 2X AL 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(yon== 1 and deger == 3, title='Volume 3X AL', message='Volume 3X AL 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(yon== 1 and deger == 4, title='Volume 3X+ AL', message='Volume 3X+ AL 5D {{ticker}}, FİYAT={{close}}')
 
-alertcondition(yon== 0 and deger == 1, title='Volume 1X SAT', message='Volume 1X SAT 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(yon== 0 and deger == 2, title='Volume 2X SAT', message='Volume 2X SAT 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(yon== 0 and deger == 3, title='Volume 3X SAT', message='Volume 3X SAT 5D {{ticker}}, FİYAT={{close}}')
-alertcondition(yon== 0 and deger == 4, title='Volume 3X+ SAT', message='Volume 3X+ SAT 5D {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger >= 1, title='Volume 1X+ AL', message='Volume 1X+ AL {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger == 1, title='Volume 1X AL', message='Volume 1X AL {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger == 2, title='Volume 2X AL', message='Volume 2X AL {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger >= 2, title='Volume 2X+ AL', message='Volume 2X+ AL {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger == 3, title='Volume 3X AL', message='Volume 3X AL {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 1 and deger == 4, title='Volume 3X+ AL', message='Volume 3X+ AL {{ticker}}, FİYAT={{close}}')
+
+alertcondition(yon== 0 and deger >= 1, title='Volume 1X+ SAT', message='Volume 1X+ SAT {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger == 1, title='Volume 1X SAT', message='Volume 1X SAT {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger == 2, title='Volume 2X SAT', message='Volume 2X SAT {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger >= 2, title='Volume 2X+ SAT', message='Volume 2X+ SAT {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger == 3, title='Volume 3X SAT', message='Volume 3X SAT {{ticker}}, FİYAT={{close}}')
+alertcondition(yon== 0 and deger == 4, title='Volume 3X+ SAT', message='Volume 3X+ SAT {{ticker}}, FİYAT={{close}}')
+
 
 
 gecmisEksi1 = if yon[1] == 0 and deger[1] > 0
@@ -94,22 +139,42 @@ else
 
 
 
+dususDurumu = degerD > 0 and yonD > 0
+
+myV1d = dususDurumu and dususDurumu[1] and dususDurumu[2]==false
+plotshape(myV1d , title ='Hacim(-1x-1)', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
+alertcondition(myV1d, title='Hacim(-1x-1)', message='Hacim(-1x-1) {{ticker}}, FİYAT={{close}}')
+
+myV2d = dususDurumu and dususDurumu[1] and dususDurumu[2]==true and dususDurumu[3]==false
+plotshape(myV2d, title ='Hacim(-1x-2)', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+alertcondition(myV2d, title='Hacim(-1x-2)', message='Hacim(-1x-2) {{ticker}}, FİYAT={{close}}')
+
+myV3d = dususDurumu and dususDurumu[1] and dususDurumu[2]==true and dususDurumu[3]==true
+plotshape(myV3d, title ='Hacim(-1x-3)', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.tiny)
+alertcondition(myV3d, title='Hacim(-1x-3)', message='Hacim(-1x-3) {{ticker}}, FİYAT={{close}}')
+
+alertcondition(myV1d or myV2d or myV3d, title='Hacim(-any)', message='Hacim(-any) {{ticker}}, FİYAT={{close}}')
+
+
 
 yukselmeDurumu = deger > 0 and yon >0
 
 myV1 = yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==false
-plotshape(myV1 , title ='Hacim(1x1)', text='', style=shape.triangleup, location=location.top, color=color.new(color.yellow, 0), offset=0, size=size.small)
+plotshape(myV1 , title ='Hacim(1x1)', text='', style=shape.triangleup, location=location.top, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
 alertcondition(myV1, title='Hacim(1x1)', message='Hacim(1x1) {{ticker}}, FİYAT={{close}}')
 
 myV2 = yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==false
-plotshape(myV2, title ='Hacim(1x2)', text='', style=shape.triangleup, location=location.top, color=color.new(color.orange, 0), offset=0, size=size.small)
+plotshape(myV2, title ='Hacim(1x2)', text='', style=shape.triangleup, location=location.top, color=color.new(color.orange, 0), offset=0, size=size.tiny)
 alertcondition(myV2, title='Hacim(1x2)', message='Hacim(1x2) {{ticker}}, FİYAT={{close}}')
 
 myV3 = yukselmeDurumu and yukselmeDurumu[1] and yukselmeDurumu[2]==true and yukselmeDurumu[3]==true
-plotshape(myV3, title ='Hacim(1x3)', text='', style=shape.triangleup, location=location.top, color=color.new(color.red, 0), offset=0, size=size.small)
+plotshape(myV3, title ='Hacim(1x3)', text='', style=shape.triangleup, location=location.top, color=color.new(color.red, 0), offset=0, size=size.tiny)
 alertcondition(myV3, title='Hacim(1x3)', message='Hacim(1x3) {{ticker}}, FİYAT={{close}}')
 
 alertcondition(myV1 or myV2 or myV3, title='Hacim(any)', message='Hacim(any) {{ticker}}, FİYAT={{close}}')
+
+
+
 
 
 sart3 =  (yon==1 and deger > 1) and (deger[1]==0 and deger[2]==0 and deger[3]==0 and deger[4]==0 and deger[5]==0 and deger[6]==0 )
@@ -255,5 +320,4 @@ plotshape(deger == 4 and yon ==1, text='3+', style=shape.triangleup, location=lo
 //plot(5, title='2 Saat', color = peryodUyumu120==1 ? rengi120 : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4, join=true)
 //plot(4, title='1 Gün', color = peryodUyumu1G==1 ? rengi1G : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4 , join=true)
 //plot(3, title='1 Hafta', color = peryodUyumu1H==1 ? rengi1H : color.new(color.white, 70) , style=plot.style_circles, linewidth= 4, join=true)
-
 
