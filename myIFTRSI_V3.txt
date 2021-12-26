@@ -3,10 +3,10 @@
 
 //@version=5
 
-indicator('myIFTRSI V3', shorttitle='myIFTRSI V3')
-tf1 = input("5", title='Zaman Dilimi 1:', defval='')
-tf2 = input("30", title='Zaman Dilimi 2:', defval='')
-tf3 = input("120", title='Zaman Dilimi 3:', defval='')
+indicator('myIFTRSI V3.1', shorttitle='myIFTRSI V3.1')
+tf1 = input("1", title='Zaman Dilimi 1:', defval='')
+tf2 = input("5", title='Zaman Dilimi 2:', defval='')
+tf3 = input("30", title='Zaman Dilimi 3:', defval='')
 
 
 RSI = true
@@ -35,7 +35,7 @@ plot(RSI and INV2_3 ? INV2_3 * 100 : na, color=color.new(color.blue, 0), linewid
 myLine0 = hline(0, color=color.green)
 
 rsiYukariKesRsi0 = ta.crossover(INV2 , -0.50)
-plotshape(rsiYukariKesRsi0, text='', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.small)
+plotshape(rsiYukariKesRsi0, text='', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.tiny)
 alertcondition(rsiYukariKesRsi0, title="IFTRSI AL", message='IFTRSI AL {{ticker}}, FİYAT={{close}}')
 
 
@@ -44,5 +44,5 @@ plotshape(rsiYukariKesRsi0_2, text='', style=shape.triangleup, location=location
 alertcondition(rsiYukariKesRsi0_2, title="IFTRSI_2 AL", message='IFTRSI_2 AL {{ticker}}, FİYAT={{close}}')
 
 rsiYukariKesRsi0_3 = ta.crossover(INV2_3 , -0.50)
-plotshape(rsiYukariKesRsi0_3, text='', style=shape.triangleup, location=location.bottom, color=color.new(color.blue, 0), offset=0, size=size.small)
+plotshape(rsiYukariKesRsi0_3, text='', style=shape.triangleup, location=location.bottom, color=color.new(color.blue, 0), offset=0, size=size.tiny)
 alertcondition(rsiYukariKesRsi0_3, title="IFTRSI_3 AL", message='IFTRSI_3 AL {{ticker}}, FİYAT={{close}}')
