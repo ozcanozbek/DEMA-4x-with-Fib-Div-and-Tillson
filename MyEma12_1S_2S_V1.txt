@@ -1,43 +1,88 @@
 //@version=5
-indicator(title='MyEma12_1S_2S V1', shorttitle='MyEma12_1S_2S V1', format=format.volume)
+indicator(title='MyEma12_1S_2S V1.1', shorttitle='MyEma12_1S_2S V1.1', format=format.volume)
 
+acZd1 = input(defval = true, title = '1. Zaman Dilimi Çizgileri Gözüksün mü?')   
+acZd2 = input(defval = false, title = '2. Zaman Dilimi Çizgileri Gözüksün mü?')   
+acZd3 = input(defval = false, title = '3. Zaman Dilimi Çizgileri Gözüksün mü?')   
 
-tf1S = input("60", title='Zaman Dilimi 1:', defval='60')
-myClose1S = request.security(syminfo.tickerid, tf1S, close)
+acCCAS = input.int(defval = 85, title = 'Çok Çok Aşırı Satım Çizgisi % Değeri')   
+acCAS = input.int(defval = 80, title = 'Çok Aşırı Satım Çizgisi % Değeri')   
+acAS = input.int(defval = 70, title = 'Aşırı Satım Çizgisi % Değeri')   
+acS = input.int(defval = 60, title = 'Satım Çizgisi % Değeri')   
+
+acA = input.int(defval = 45, title = 'Alım Çizgisi % Değeri')   
+acAA = input.int(defval = 30, title = 'Aşırı Alım Çizgisi % Değeri')   
+acCAA = input.int(defval = 20, title = 'Çok Aşırı Alım Çizgisi % Değeri')   
+
+tf1S = input("1", title='Zaman Dilimi 1:', defval="1")
+myClose1S = request.security(syminfo.tickerid, tf1S, hlc3)
 myRsi1S = ta.rsi(myClose1S,14)
 myEma121S = ta.ema(myRsi1S, 12)
 
-tf2S = input("120", title='Zaman Dilimi 2:', defval='120')
-myClose2S = request.security(syminfo.tickerid, tf2S, close)
+tf2S = input("5", title='Zaman Dilimi 2:', defval="5")
+myClose2S = request.security(syminfo.tickerid, tf2S, hlc3)
 myRsi2S = ta.rsi(myClose2S,14)
 myEma122S = ta.ema(myRsi2S, 12)
 
-tf3S = input("240", title='Zaman Dilimi 3:', defval='240')
-myClose3S = request.security(syminfo.tickerid, tf3S, close)
+tf3S = input("30", title='Zaman Dilimi 3:', defval="30")
+myClose3S = request.security(syminfo.tickerid, tf3S, hlc3)
 myRsi3S = ta.rsi(myClose3S,14)
 myEma123S = ta.ema(myRsi3S, 12)
 
-
 //myEma12
-plot(myRsi1S, title="Rsi 1S", color=color.yellow, offset=0, linewidth=2)
-plot(myEma121S, title="EMA12 1S", color=color.yellow, offset=0, linewidth=2)
+plot(myRsi1S and acZd1 ? myRsi1S : na, title="Rsi 1S", color=color.new(color.yellow,0), offset=0, linewidth=2)
+plot(myEma121S and acZd1 ? myEma121S : na, title="EMA12 1S", color=color.new(color.yellow,100), offset=0, linewidth=2)
 
-plot(myRsi2S, title="Rsi 2S", color=color.orange, offset=0, linewidth=2)
-plot(myEma122S, title="EMA12 2S", color=color.orange, offset=0, linewidth=2)
+plot(myRsi2S and acZd2 ? myRsi2S : na, title="Rsi 2S", color=color.new(color.orange,0), offset=0, linewidth=2)
+plot(myEma122S and acZd2 ? myEma122S : na, title="EMA12 2S", color=color.new(color.orange,100), offset=0, linewidth=2)
 
-plot(myRsi3S, title="Rsi 3S", color=color.red, offset=0, linewidth=2)
-plot(myEma123S, title="EMA12 3S", color=color.red, offset=0, linewidth=2)
+plot(myRsi3S and acZd3 ? myRsi3S : na, title="Rsi 3S", color=color.new(color.red,0), offset=0, linewidth=2)
+plot(myEma123S and acZd3 ? myEma123S : na, title="EMA12 3S", color=color.new(color.red,100), offset=0, linewidth=2)
 
-ema12Ema12Y = ta.crossover(myEma122S, myEma121S)
-plotshape(ema12Ema12Y ,title ='EMAs AL', text='', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
+upbandHH = hline(acCCAS, "Çok Çok Aşırı Satım Bölgesi", color=color.new(color.purple, 0), linewidth=2)
+upbandH = hline(acCAS, "Çok Aşırı Satım Bölgesi", color=color.new(color.lime, 0), linewidth=2)
+upband = hline(acAS, "Aşırı Satım Bölgesi", color=color.new(color.blue, 0), linewidth=2)
+bullzoneband = hline(acS, "Satım Bölgesi", color=color.new(color.white, 0), linewidth=2)
+fill(upband, bullzoneband, color=color.new(color.red,40), title = 'Satım Bölgesi')
+fill(upband, upbandH, color=color.new(color.red,60), title = 'Aşırı Satım Bölgesi')
+fill(upbandH, upbandHH, color=color.new(color.red,88), title = 'Çok Aşırı Satım Bölgesi')
 
-ema12Ema12A = ta.crossunder(myEma122S, myEma121S)
-plotshape(ema12Ema12A ,title ='EMAs SAT', text='', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
+bearzoneband = hline(acA, "Alım Bölgesi", color=color.new(color.yellow, 0), linewidth=2)
+downband = hline(acAA, "Aşırı Alım Bölgesi", color=color.new(color.orange, 0), linewidth=2)
+downbandL = hline(acCAA, "Çok Aşırı Alım Bölgesi", color=color.new(color.red, 0), linewidth=2)
+fill(bearzoneband, downband, color=color.new(color.blue,60), title = 'Alım Bölgesi')
+fill(downband, downbandL, color=color.new(color.blue,80), title = 'Aşırı Alım Bölgesi')
 
-bullzoneband = hline(65, "Bull Lower Zone", color=#40E0D0, linewidth=2, linestyle=hline.style_dotted)
-upband = hline(80, "Bull Uppe Zoner", color=#40E0D0, linewidth=2)
-fill(upband, bullzoneband, color=#40E0D0, transp=90)
+//Satış Bolgesi
+yukariKesSatisBolgesi = ta.crossover(myRsi1S , 60)
+yukariKesAsiriSatisBolgesi = ta.crossover(myRsi1S , 70)
+yukariKesCokAsiriSatisBolgesi = ta.crossover(myRsi1S , 80)
+yukariKesCokCokAsiriSatisBolgesi = ta.crossover(myRsi1S , 85)
 
-bearzoneband = hline(45, "Bear Upper Zone", color=#9400D3, linewidth=2, linestyle=hline.style_dotted)
-downband = hline(30, "Bear Lower Zone", color=#9400D3, linewidth=2)
-fill(bearzoneband, downband, color=#9400D3, transp=90)
+plotshape(yukariKesCokCokAsiriSatisBolgesi,title ='Çok Çok Aşırı Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.purple, 0), offset=0, size=size.tiny)
+alertcondition(yukariKesCokCokAsiriSatisBolgesi, title="CCAS+++ SAT", message='CCAS+++ SAT {{ticker}}, FİYAT={{close}}')
+
+plotshape(yukariKesCokAsiriSatisBolgesi,title ='Çok Aşırı Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.lime, 0), offset=0, size=size.tiny)
+alertcondition(yukariKesCokAsiriSatisBolgesi, title="CAS+++ SAT", message='CAS+++ SAT {{ticker}}, FİYAT={{close}}')
+
+plotshape(yukariKesAsiriSatisBolgesi,title ='Aşırı Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.blue, 0), offset=0, size=size.tiny)
+alertcondition(yukariKesAsiriSatisBolgesi, title="AS++ SAT", message='AS++ SAT {{ticker}}, FİYAT={{close}}')
+
+plotshape(yukariKesSatisBolgesi,title ='Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.white, 0), offset=0, size=size.tiny)
+alertcondition(yukariKesSatisBolgesi, title="A+ SAT", message='A+ SAT {{ticker}}, FİYAT={{close}}')
+
+//Alım Bölgesi
+asagiKesAlimBolgesi = ta.crossunder(myRsi1S , 45)
+asagiKesAsiriAlimBolgesi = ta.crossunder(myRsi1S , 30)
+asagiKesCokAsiriAlimBolgesi = ta.crossunder(myRsi1S , 20)
+
+plotshape(asagiKesAlimBolgesi,title ='Alım İşareti', text='', style=shape.triangleup, location=location.bottom, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
+alertcondition(asagiKesAlimBolgesi, title="A- AL", message='A- AL {{ticker}}, FİYAT={{close}}')
+
+plotshape(asagiKesAsiriAlimBolgesi,title ='Aşırı Alım İşareti', text='', style=shape.triangleup, location=location.bottom, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+alertcondition(asagiKesAsiriAlimBolgesi, title="AA-- AL", message='AA-- AL {{ticker}}, FİYAT={{close}}')
+
+plotshape(asagiKesCokAsiriAlimBolgesi,title ='Çok Aşırı Alım İşareti', text='', style=shape.triangleup, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.tiny)
+alertcondition(asagiKesCokAsiriAlimBolgesi, title="CAA--- AL", message='CAA--- AL {{ticker}}, FİYAT={{close}}')
+
+//BURADA BITTI
