@@ -1,9 +1,16 @@
 //@version=5
-indicator(title='MyEma12_1S_2S V1.1', shorttitle='MyEma12_1S_2S V1.1', format=format.volume)
+indicator(title='MyEma12_1S_2S V1.2', shorttitle='MyEma12_1S_2S V1.2', format=format.volume)
 
 acZd1 = input(defval = true, title = '1. Zaman Dilimi Çizgileri Gözüksün mü?')   
 acZd2 = input(defval = false, title = '2. Zaman Dilimi Çizgileri Gözüksün mü?')   
 acZd3 = input(defval = false, title = '3. Zaman Dilimi Çizgileri Gözüksün mü?')   
+
+acAlSatIsaret = input(defval = true, title = 'Al Sat İşaretleri Gözüksün mü?')  
+acTerkIsaret = input(defval = false, title = 'Bölge Terk İşaretleri Gözüksün mü?')  
+
+acAlimTerk = input.int(defval = 60, title = 'Alım Terk Bölgesi % Değeri')   
+acSatimTerk = input.int(defval = 50, title = 'Satım Terk Bölgesi % Değeri')   
+
 
 acCCAS = input.int(defval = 85, title = 'Çok Çok Aşırı Satım Çizgisi % Değeri')   
 acCAS = input.int(defval = 80, title = 'Çok Aşırı Satım Çizgisi % Değeri')   
@@ -59,16 +66,16 @@ yukariKesAsiriSatisBolgesi = ta.crossover(myRsi1S , 70)
 yukariKesCokAsiriSatisBolgesi = ta.crossover(myRsi1S , 80)
 yukariKesCokCokAsiriSatisBolgesi = ta.crossover(myRsi1S , 85)
 
-plotshape(yukariKesCokCokAsiriSatisBolgesi,title ='Çok Çok Aşırı Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.purple, 0), offset=0, size=size.tiny)
+plotshape(yukariKesCokCokAsiriSatisBolgesi and acAlSatIsaret ? yukariKesCokCokAsiriSatisBolgesi : na ,title ='Çok Çok Aşırı Satış İşareti', text='', style=shape.triangleup, location=location.top, color=color.new(color.purple, 0), offset=0, size=size.tiny)
 alertcondition(yukariKesCokCokAsiriSatisBolgesi, title="CCAS+++ SAT", message='CCAS+++ SAT {{ticker}}, FİYAT={{close}}')
 
-plotshape(yukariKesCokAsiriSatisBolgesi,title ='Çok Aşırı Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.lime, 0), offset=0, size=size.tiny)
+plotshape(yukariKesCokAsiriSatisBolgesi and acAlSatIsaret ? yukariKesCokAsiriSatisBolgesi : na ,title ='Çok Aşırı Satış İşareti', text='', style=shape.triangleup, location=location.top, color=color.new(color.lime, 0), offset=0, size=size.tiny)
 alertcondition(yukariKesCokAsiriSatisBolgesi, title="CAS+++ SAT", message='CAS+++ SAT {{ticker}}, FİYAT={{close}}')
 
-plotshape(yukariKesAsiriSatisBolgesi,title ='Aşırı Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.blue, 0), offset=0, size=size.tiny)
+plotshape(yukariKesAsiriSatisBolgesi and acAlSatIsaret ? yukariKesAsiriSatisBolgesi : na ,title ='Aşırı Satış İşareti', text='', style=shape.triangleup, location=location.top, color=color.new(color.blue, 0), offset=0, size=size.tiny)
 alertcondition(yukariKesAsiriSatisBolgesi, title="AS++ SAT", message='AS++ SAT {{ticker}}, FİYAT={{close}}')
 
-plotshape(yukariKesSatisBolgesi,title ='Satış İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.white, 0), offset=0, size=size.tiny)
+plotshape(yukariKesSatisBolgesi and acAlSatIsaret ? yukariKesSatisBolgesi : na ,title ='Satış İşareti', text='', style=shape.triangleup, location=location.top, color=color.new(color.white, 0), offset=0, size=size.tiny)
 alertcondition(yukariKesSatisBolgesi, title="A+ SAT", message='A+ SAT {{ticker}}, FİYAT={{close}}')
 
 //Alım Bölgesi
@@ -76,13 +83,24 @@ asagiKesAlimBolgesi = ta.crossunder(myRsi1S , 45)
 asagiKesAsiriAlimBolgesi = ta.crossunder(myRsi1S , 30)
 asagiKesCokAsiriAlimBolgesi = ta.crossunder(myRsi1S , 20)
 
-plotshape(asagiKesAlimBolgesi,title ='Alım İşareti', text='', style=shape.triangleup, location=location.bottom, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
+plotshape(asagiKesAlimBolgesi and acAlSatIsaret ? asagiKesAlimBolgesi : na ,title ='Alım İşareti', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.yellow, 0), offset=0, size=size.tiny)
 alertcondition(asagiKesAlimBolgesi, title="A- AL", message='A- AL {{ticker}}, FİYAT={{close}}')
 
-plotshape(asagiKesAsiriAlimBolgesi,title ='Aşırı Alım İşareti', text='', style=shape.triangleup, location=location.bottom, color=color.new(color.orange, 0), offset=0, size=size.tiny)
+plotshape(asagiKesAsiriAlimBolgesi and acAlSatIsaret ? asagiKesAsiriAlimBolgesi : na ,title ='Aşırı Alım İşareti', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.orange, 0), offset=0, size=size.tiny)
 alertcondition(asagiKesAsiriAlimBolgesi, title="AA-- AL", message='AA-- AL {{ticker}}, FİYAT={{close}}')
 
-plotshape(asagiKesCokAsiriAlimBolgesi,title ='Çok Aşırı Alım İşareti', text='', style=shape.triangleup, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.tiny)
+plotshape(asagiKesCokAsiriAlimBolgesi and acAlSatIsaret ? asagiKesCokAsiriAlimBolgesi : na ,title ='Çok Aşırı Alım İşareti', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.tiny)
 alertcondition(asagiKesCokAsiriAlimBolgesi, title="CAA--- AL", message='CAA--- AL {{ticker}}, FİYAT={{close}}')
+
+//Alım Bölesi Terkedildi
+yukariAlimBolgesiTerk = ta.crossover(myRsi1S , acAlimTerk) //60
+plotshape(yukariAlimBolgesiTerk and acTerkIsaret ? yukariAlimBolgesiTerk : na ,title ='Alım Bölgesi Terk İşareti', text='', style=shape.triangleup, location=location.bottom, color=color.new(color.lime, 0), offset=0, size=size.small)
+alertcondition(yukariAlimBolgesiTerk, title="Alım Terk AL", message='AlımTerk AL {{ticker}}, FİYAT={{close}}')
+
+//Satım Bölgesi Terkedildi
+asagiSatimBolgesiTerk = ta.crossunder(myRsi1S ,acSatimTerk) //50
+plotshape(asagiSatimBolgesiTerk and acTerkIsaret ? asagiSatimBolgesiTerk : na ,title ='Satım Bölgesi Terk İşareti', text='', style=shape.triangledown, location=location.top, color=color.new(color.red, 0), offset=0, size=size.small)
+alertcondition(asagiKesCokAsiriAlimBolgesi, title="Satım Terk SAT", message='SatımTerk SAT {{ticker}}, FİYAT={{close}}')
+
 
 //BURADA BITTI
