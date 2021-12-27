@@ -1,9 +1,5 @@
 //@version=5
-indicator(title='MyEma12_1S_2S V1.2', shorttitle='MyEma12_1S_2S V1.2', format=format.volume)
-
-acZd1 = input(defval = true, title = '1. Zaman Dilimi Çizgileri Gözüksün mü?')   
-acZd2 = input(defval = false, title = '2. Zaman Dilimi Çizgileri Gözüksün mü?')   
-acZd3 = input(defval = false, title = '3. Zaman Dilimi Çizgileri Gözüksün mü?')   
+indicator(title='MyEma12_1S_2S V1.3', shorttitle='MyEma12_1S_2S V1.2', format=format.volume, timeframe="")
 
 acAlSatIsaret = input(defval = true, title = 'Al Sat İşaretleri Gözüksün mü?')  
 acTerkIsaret = input(defval = false, title = 'Bölge Terk İşaretleri Gözüksün mü?')  
@@ -21,7 +17,10 @@ acA = input.int(defval = 45, title = 'Alım Çizgisi % Değeri')
 acAA = input.int(defval = 30, title = 'Aşırı Alım Çizgisi % Değeri')   
 acCAA = input.int(defval = 20, title = 'Çok Aşırı Alım Çizgisi % Değeri')   
 
-tf1S = input("1", title='Zaman Dilimi 1:', defval="1")
+//tf1S = input("1", title='Zaman Dilimi 1:', defval="1")
+tf1S = timeframe.period
+//request.security(syminfo.tickerid, timeframe.period, open)
+
 myClose1S = request.security(syminfo.tickerid, tf1S, hlc3)
 myRsi1S = ta.rsi(myClose1S,14)
 myEma121S = ta.ema(myRsi1S, 12)
@@ -37,14 +36,8 @@ myRsi3S = ta.rsi(myClose3S,14)
 myEma123S = ta.ema(myRsi3S, 12)
 
 //myEma12
-plot(myRsi1S and acZd1 ? myRsi1S : na, title="Rsi 1S", color=color.new(color.yellow,0), offset=0, linewidth=2)
-plot(myEma121S and acZd1 ? myEma121S : na, title="EMA12 1S", color=color.new(color.yellow,100), offset=0, linewidth=2)
-
-plot(myRsi2S and acZd2 ? myRsi2S : na, title="Rsi 2S", color=color.new(color.orange,0), offset=0, linewidth=2)
-plot(myEma122S and acZd2 ? myEma122S : na, title="EMA12 2S", color=color.new(color.orange,100), offset=0, linewidth=2)
-
-plot(myRsi3S and acZd3 ? myRsi3S : na, title="Rsi 3S", color=color.new(color.red,0), offset=0, linewidth=2)
-plot(myEma123S and acZd3 ? myEma123S : na, title="EMA12 3S", color=color.new(color.red,100), offset=0, linewidth=2)
+plot(myRsi1S, title="Rsi 1S", color=color.new(color.yellow,0), offset=0, linewidth=2)
+plot(myEma121S, title="EMA12 1S", color=color.new(color.yellow,100), offset=0, linewidth=2)
 
 upbandHH = hline(acCCAS, "Çok Çok Aşırı Satım Bölgesi", color=color.new(color.purple, 0), linewidth=2)
 upbandH = hline(acCAS, "Çok Aşırı Satım Bölgesi", color=color.new(color.lime, 0), linewidth=2)
