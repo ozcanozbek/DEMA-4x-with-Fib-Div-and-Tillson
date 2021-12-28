@@ -1,12 +1,11 @@
 //@version=5
-indicator(title='MyEma12_1S_2S V1.3', shorttitle='MyEma12_1S_2S V1.2', format=format.volume, timeframe="")
+indicator(title='MyEma12_1S_2S V1.3', shorttitle='MyEma12_1S_2S V1.3', format=format.volume, timeframe="")
 
 acAlSatIsaret = input(defval = true, title = 'Al Sat İşaretleri Gözüksün mü?')  
 acTerkIsaret = input(defval = false, title = 'Bölge Terk İşaretleri Gözüksün mü?')  
 
 acAlimTerk = input.int(defval = 60, title = 'Alım Terk Bölgesi % Değeri')   
 acSatimTerk = input.int(defval = 50, title = 'Satım Terk Bölgesi % Değeri')   
-
 
 acCCAS = input.int(defval = 85, title = 'Çok Çok Aşırı Satım Çizgisi % Değeri')   
 acCAS = input.int(defval = 80, title = 'Çok Aşırı Satım Çizgisi % Değeri')   
