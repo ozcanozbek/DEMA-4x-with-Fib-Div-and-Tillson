@@ -28,7 +28,8 @@ myEma121S = ta.ema(myRsi1S, myEmaD)
 rs1 =  plot(myRsi1S, title="Rsi 1S", color=color.new(color.yellow,0), offset=0, linewidth=2)
 ema1 = plot(myEma121S, title="EMA12 1S", color=color.new(color.white,0), offset=0, linewidth=2)
 
-fill(rs1, ema1, title = 'Trend Bölgesi', color=myRsi1S >= myEma121S ? color.new(color.lime, 50) : color.new(color.red, 50))
+//fill(rs1, ema1, title = 'Trend Bölgesi', color=myRsi1S >= myEma121S ? color.new(color.lime, 0) : myRsi1S>myRsi1S[1] and myRsi1S[1]>myRsi1S[2] ? color.new(color.yellow, 0) : color.new(color.red, 0))
+fill(rs1, ema1, title = 'Trend Bölgesi', color=myRsi1S >= myEma121S ? color.new(color.lime, 0) : myRsi1S>=myRsi1S[1] ? color.new(color.orange, 0) : color.new(color.red, 0))
 
 
 
