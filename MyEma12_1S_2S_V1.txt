@@ -1,5 +1,5 @@
 //@version=5
-indicator(title='MyEma12_1S_2S V1.7', shorttitle='MyEma12_1S_2S V1.6', format=format.volume, timeframe="")
+indicator(title='MyEma12_1S_2S V1.7', shorttitle='Rsi/Ema Bölgesi', format=format.volume, timeframe="")
 
 acAlSatIsaret = input(defval = true, title = 'Al Sat İşaretleri Gözüksün mü?')  
 acTerkIsaret = input(defval = false, title = 'Bölge Terk İşaretleri Gözüksün mü?')  
@@ -103,5 +103,7 @@ plotshape(asagiKesCokAsiriAlimBolgesi and acAlSatIsaret ? asagiKesCokAsiriAlimBo
 alertcondition(asagiKesCokAsiriAlimBolgesi, title="CAA--- AL", message='CAA--- AL {{ticker}}, FİYAT={{close}}')
 plotshape(asagiKesUltraAsiriAlimBolgesi and acAlSatIsaret ? asagiKesUltraAsiriAlimBolgesi : na ,title ='Ultra Aşırı Alım İşareti', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.tiny)
 alertcondition(asagiKesUltraAsiriAlimBolgesi, title="UCAA--- AL", message='UCAA--- AL {{ticker}}, FİYAT={{close}}')
+
+
 
 //BURADA BITTI
