@@ -1,9 +1,11 @@
 //@version=5
-indicator(title='MyEma12_1S_2S V1.6', shorttitle='MyEma12_1S_2S V1.6', format=format.volume, timeframe="")
+indicator(title='MyEma12_1S_2S V1.7', shorttitle='MyEma12_1S_2S V1.6', format=format.volume, timeframe="")
 
 acAlSatIsaret = input(defval = true, title = 'Al Sat İşaretleri Gözüksün mü?')  
 acTerkIsaret = input(defval = false, title = 'Bölge Terk İşaretleri Gözüksün mü?')  
 acRsiEmaIsaret = input(defval = false, title = 'Rsi ve Ema Kesişimleri İşaretleri Gözüksün mü?')  
+acBolgeCizgileri = input(defval = false, title = 'Bölge Çizgileri Gözüksün mü?')  
+
 
 acAlimTerk = input.int(defval = 60, title = 'Alım Terk Bölgesi % Değeri')   
 acSatimTerk = input.int(defval = 50, title = 'Satım Terk Bölgesi % Değeri')   
@@ -33,17 +35,18 @@ fill(rs1, ema1, title = 'Trend Bölgesi', color=myRsi1S >= myEma121S ? color.new
 
 
 
-upbandHH = hline(acCCAS, "Çok Çok Aşırı Satım Bölgesi", color=color.new(color.purple, 0), linewidth=2)
-upbandH = hline(acCAS, "Çok Aşırı Satım Bölgesi", color=color.new(color.lime, 0), linewidth=2)
-upband = hline(acAS, "Aşırı Satım Bölgesi", color=color.new(color.blue, 0), linewidth=2)
-bullzoneband = hline(acS, "Satım Bölgesi", color=color.new(color.white, 0), linewidth=2)
+upbandHH = hline(acCCAS, "Çok Çok Aşırı Satım Bölgesi", color=color.new(color.purple, acBolgeCizgileri ? 0 : 100), linewidth=2)
+upbandH = hline(acCAS, "Çok Aşırı Satım Bölgesi", color=color.new(color.lime, acBolgeCizgileri ? 0 : 100), linewidth=2)
+upband = hline(acAS, "Aşırı Satım Bölgesi", color=color.new(color.blue, acBolgeCizgileri ? 0 : 100), linewidth=2)
+bullzoneband = hline(acS, "Satım Bölgesi", color=color.new(color.white, acBolgeCizgileri ? 0 : 100), linewidth=2)
+
 fill(upband, bullzoneband, color=color.new(color.red,40), title = 'Satım Bölgesi')
 fill(upband, upbandH, color=color.new(color.red,60), title = 'Aşırı Satım Bölgesi')
 fill(upbandH, upbandHH, color=color.new(color.red,88), title = 'Çok Aşırı Satım Bölgesi')
 
-bearzoneband = hline(acA, "Alım Bölgesi", color=color.new(color.yellow, 0), linewidth=2)
-downband = hline(acAA, "Aşırı Alım Bölgesi", color=color.new(color.orange, 0), linewidth=2)
-downbandL = hline(acCAA, "Çok Aşırı Alım Bölgesi", color=color.new(color.red, 0), linewidth=2)
+bearzoneband = hline(acA, "Alım Bölgesi", color=color.new(color.yellow, acBolgeCizgileri ? 0 : 100), linewidth=2)
+downband = hline(acAA, "Aşırı Alım Bölgesi", color=color.new(color.orange, acBolgeCizgileri ? 0 : 100), linewidth=2)
+downbandL = hline(acCAA, "Çok Aşırı Alım Bölgesi", color=color.new(color.red, acBolgeCizgileri ? 0 : 100), linewidth=2)
 fill(bearzoneband, downband, color=color.new(color.blue,60), title = 'Alım Bölgesi')
 fill(downband, downbandL, color=color.new(color.blue,80), title = 'Aşırı Alım Bölgesi')
 
@@ -100,7 +103,5 @@ plotshape(asagiKesCokAsiriAlimBolgesi and acAlSatIsaret ? asagiKesCokAsiriAlimBo
 alertcondition(asagiKesCokAsiriAlimBolgesi, title="CAA--- AL", message='CAA--- AL {{ticker}}, FİYAT={{close}}')
 plotshape(asagiKesUltraAsiriAlimBolgesi and acAlSatIsaret ? asagiKesUltraAsiriAlimBolgesi : na ,title ='Ultra Aşırı Alım İşareti', text='', style=shape.triangledown, location=location.bottom, color=color.new(color.red, 0), offset=0, size=size.tiny)
 alertcondition(asagiKesUltraAsiriAlimBolgesi, title="UCAA--- AL", message='UCAA--- AL {{ticker}}, FİYAT={{close}}')
-
-
 
 //BURADA BITTI
