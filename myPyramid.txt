@@ -1,25 +1,25 @@
 //O2can O2bek (Özcan Özbek)
 //@version=5
-indicator(title='Piramid - V1.3.1', shorttitle='Piramid - V1.3.1', overlay=true, timeframe="")
+indicator(title='Piramid - V1.4.2', shorttitle='Piramid', overlay=true, timeframe="")
 
 
 //aç kapa
 
-acUA = input(defval = true, title = 'Üst Alt Çizgiler')   
+acUA = input(defval = false, title = 'Üst Alt Çizgiler')   
 
 acEwWma = input(defval = true, title = 'Ema9 Wma30 Göstergeleri')   
-acEwAlSat = input(defval = true, title = 'EW AL-SAT')   
+acEwAlSat = input(defval = false, title = 'EW AL-SAT')   
 
 acFibDivAlSat = input(defval = false, title = 'Fib Div AL-SAT')   
 
 acFibo = input(defval = false, title='Fibo Fband Çizgileri')
 acFiboDetayAlSat = input(defval = false, title = 'Fibo Fband AL-SAT')   
 
-acFiboLines = input(defval = true, title = 'Fib Yatay Çizgileri')   
-acFibAlSat = input(defval = true, title = 'Fib Yatay Çizgi AL-SAT')   
+acFiboLines = input(defval = false, title = 'Fib Yatay Çizgileri')   
+acFibAlSat = input(defval = false, title = 'Fib Yatay Çizgi AL-SAT')   
 
 acTema = input(defval = false, title = 'Tema Çizgileri')   
-acTemaAlSat = input(defval = true, title = 'Tema AL-SAT')   
+acTemaAlSat = input(defval = false, title = 'Tema AL-SAT')   
 
 acT3 = input(defval = false, title = 'T3 - Tillson Çizgisi')  
 acT3AlSat = input(defval = false, title = 'T3 - Tillson AL-SAT')  
@@ -255,7 +255,7 @@ alertcondition(greendot, title='Fib Div Sat', message='Fib Div SAT {{ticker}}, F
 
 
 //Fiblines
-len = 200
+len = 150
 //len = input(title='Period', defval=200)
 fractal_top = 0.0
 fractal_top := high < high[2] and high[1] < high[2] and high[3] < high[2] and high[4] < high[2] ? high[2] : fractal_top[1]
